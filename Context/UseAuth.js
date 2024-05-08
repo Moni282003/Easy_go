@@ -74,6 +74,7 @@ export const AuthContextprovider=({children})=>{
             let msg = e.message;
             if (msg.includes('(auth/invalid-email)')) msg = "Invalid email";
             if (msg.includes('(auth/email-already-in-use)')) msg = "Email already in use";
+            if(msg.includes('')) msg="SucessFull Login"
             return { success: false, msg };
         }
     };

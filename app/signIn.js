@@ -17,7 +17,7 @@ export default function SignIn() {
     }
     const response = await login(email, pass);
     if (!response.success) {
-      Alert.alert("Sign In","Sucessfull Login");
+      Alert.alert("Sign In",response.msg);
     }
   }
 
