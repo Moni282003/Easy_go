@@ -30,7 +30,7 @@ export default function SignIn() {
         />
       </View>
       <View style={styles.titleContainer}>
-        <Text style={styles.title}>SIGNIN</Text>
+        <Text style={styles.title}>ADMIN</Text>
       </View>
       <View style={styles.contentContainer}>
         <View style={styles.inputContainer}>
@@ -59,12 +59,12 @@ export default function SignIn() {
         >
           <Text style={styles.buttonText}>Sign In</Text>
         </TouchableOpacity>
-        <View style={styles.signUpContainer}>
+        {/* <View style={styles.signUpContainer}>
           <Text>New Admin Account?</Text>
           <Pressable onPress={() => router.replace('signUp')}>
             <Text style={styles.signUpText}>Sign Up</Text>
           </Pressable>
-        </View>
+        </View> */}
         <View style={styles.footerContainer}>
           <Text style={styles.footerText}>Developed by Monish M</Text>
         </View>
@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 10,
-    paddingBottom: 50
+    paddingBottom: 50,
   },
   contentContainer: {
     width: '100%',

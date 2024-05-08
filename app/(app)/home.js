@@ -7,6 +7,7 @@ import Stats from './Screens/Stats';
 import Setting from './Screens/Setting';
 import Fontisto from '@expo/vector-icons/Fontisto';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
+import SignUp from './Screens/signUp';
 
 const Tab = createBottomTabNavigator();
 
@@ -16,7 +17,7 @@ export default function Home() {
       screenOptions={{
         headerShown: false,
         tabBarLabelStyle: {
-          fontSize: 14, 
+          fontSize: 12, // Adjust the font size here
           color: "#40916c" 
         },
         tabBarActiveTintColor: "#40916c", 
@@ -27,7 +28,6 @@ export default function Home() {
             height:60,
             borderWidth:0
         }
-       
       }}
     >
       <Tab.Screen
@@ -35,7 +35,7 @@ export default function Home() {
         component={Category}
         options={{
           title: 'Add Items',
-          tabBarIcon: ({ color, size }) => <Ionicons name="add-circle" size={30} color={color} />,
+          tabBarIcon: ({ color, size }) => <Ionicons name="add-circle" size={24} color={color} />, // Adjust the size here
         }}
       />
       <Tab.Screen
@@ -43,7 +43,7 @@ export default function Home() {
         component={List}
         options={{
           title: 'List Items',
-          tabBarIcon: ({ color, size }) => <FontAwesome5 name="clipboard-list" size={30} color={color} />,
+          tabBarIcon: ({ color, size }) => <FontAwesome5 name="clipboard-list" size={24} color={color} />, // Adjust the size here
         }}
       />
       <Tab.Screen
@@ -51,15 +51,24 @@ export default function Home() {
         component={Stats}
         options={{
           title: 'Payment',
-          tabBarIcon: ({ color, size }) => <Ionicons name="stats-chart" size={30} color={color} />,
+          tabBarIcon: ({ color, size }) => <Ionicons name="stats-chart" size={24} color={color} />, // Adjust the size here
         }}
       />
+     
       <Tab.Screen
+        name="signUp"
+        component={SignUp}
+        options={{
+          title: 'Add Admin',
+          tabBarIcon: ({ color, size }) => <Ionicons name="person-add" size={24} color={color}/>, // Adjust the size here
+        }}
+      />
+       <Tab.Screen
         name="Setting"
         component={Setting}
         options={{
           title: 'Setting',
-          tabBarIcon: ({ color, size }) => <Fontisto name="player-settings" size={30} color={color} />,
+          tabBarIcon: ({ color, size }) => <Fontisto name="player-settings" size={24} color={color} />, // Adjust the size here
         }}
       />
     </Tab.Navigator>
