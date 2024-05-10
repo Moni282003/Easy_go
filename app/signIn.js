@@ -50,6 +50,7 @@ export default function SignIn() {
             secureTextEntry={true}
             value={pass}
             onChangeText={setPass}
+            keyboardType="number-pad"
           />
         </View>
         <TouchableOpacity
