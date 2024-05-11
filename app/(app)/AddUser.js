@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { supabase } from '../../util/supabase';
 
 export default function AddUser() {
@@ -7,47 +7,66 @@ export default function AddUser() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [rowCount, setRowCount] = useState(0);
-
-  useEffect(() => {
-    fetchRowCount();
-  }, []);
-
-  const fetchRowCount = async () => {
-    try {
-      const { count, error } = await supabase.from('Worker').select('*', { count: 'exact' });
-      if (error) {
-        console.error('Error fetching row count:', error.message);
-      } else {
-        setRowCount(count);
-      }
-    } catch (error) {
-      console.error('Error fetching row count:', error.message);
-    }
-  };
 
   const handleAddUser = async () => {
-    const currentDate = new Date(); 
-    const formattedDate = formatDate(currentDate);
-    const nextId = rowCount + 1;
-    const { error } = await supabase
-      .from('Worker')
-      .insert([
-        { id: nextId, created_at: formattedDate, Name: name, Username: username, Password: password }
-      ]);
-    if (error) {
-      console.error('Error inserting data:', error.message);
-    } else {
-      console.log('User added successfully!');
+    if (password.length < 10) {
+      Alert.alert('Error', 'Password must be at least 10 characters long.');
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      Alert.alert('Error', 'Passwords do not match.');
+      return;
+    }
+
+    const usernameRegex = /^EASYGO_\d{3}$/;
+    if (!usernameRegex.test(username)) {
+      Alert.alert('Error', 'Username should begin with EASYGO_ followed by 3 numbers.');
+      return;
+    }
+
+    try {
+      const { data, error } = await supabase
+        .from('Worker')
+        .select('Username')
+        .eq('Username', username)
+        .limit(1);
+
+      if (error) {
+        console.error('Error checking username:', error.message);
+        return;
+      }
+
+      if (data.length) {
+        Alert.alert('Error', 'Username already exists.');
+        return;
+      }
+
+      const currentDate = new Date();
+      const id = currentDate.getTime(); // Using timestamp as ID
+      const formattedDate = formatDate(currentDate);
+      
+      const { error: insertError } = await supabase
+        .from('Worker')
+        .insert([
+          { id, created_at: formattedDate, Name: name, Username: username, Password: password, Activity: true }
+        ]);
+
+      if (insertError) {
+        console.error('Error inserting data:', insertError.message);
+        return;
+      }
+
+      Alert.alert('Success', 'User added successfully!');
       setName('');
       setUsername('');
       setPassword('');
       setConfirmPassword('');
-      setRowCount(rowCount + 1);
+    } catch (error) {
+      console.error('Error:', error.message);
     }
   };
 
-  // Function to format timestamp
   const formatDate = (date) => {
     const day = String(date.getDate()).padStart(2, '0');
     const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -119,7 +138,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 5,
-    marginTop:15
+    marginTop: 15,
   },
   button: {
     width: '80%',
