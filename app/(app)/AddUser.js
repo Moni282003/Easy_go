@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { supabase } from '../../util/supabase';
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 
 export default function AddUser() {
   const [name, setName] = useState('');
@@ -9,7 +10,7 @@ export default function AddUser() {
   const [confirmPassword, setConfirmPassword] = useState('');
 
   const handleAddUser = async () => {
-    if (password.length < 10) {
+    if (password.length < 7) {
       Alert.alert('Error', 'Password must be at least 10 characters long.');
       return;
     }
@@ -82,6 +83,7 @@ export default function AddUser() {
       <Text style={styles.header}>ADD USER</Text>
       <View style={styles.inputContainer}>
         <TextInput
+        autoFocus
           style={styles.input}
           placeholder="Name"
           value={name}
@@ -108,9 +110,25 @@ export default function AddUser() {
           onChangeText={setConfirmPassword}
         />
       </View>
-      <TouchableOpacity style={styles.button} onPress={handleAddUser}>
+      <TouchableOpacity activeOpacity={0.9} style={styles.button} onPress={handleAddUser}>
         <Text style={styles.buttonText}>Add User</Text>
       </TouchableOpacity>
+      <View style={{display:"flex",flexDirection:"row",alignItems:"center",marginHorizontal:15,marginTop:40,gap:7}}>
+        <Text>
+        <FontAwesome6 name="hand-point-right" size={18} color="gray" />
+        </Text>
+        <Text style={{fontSize:12,color:"gray"}}>
+          Username should begin with EASYGO_ followed by three digit number an it should be unique.
+        </Text>
+      </View>
+      <View style={{display:"flex",flexDirection:"row",alignItems:"center",marginHorizontal:15,marginTop:20,gap:7}}>
+        <Text>
+        <FontAwesome6 name="hand-point-right" size={18} color="gray" />
+        </Text>
+        <Text style={{fontSize:12,color:"gray",textAlign:"justify"}}>
+          Password should be at least 10 characters long and both Password and confirmPassword should be same.
+        </Text>
+      </View>
     </View>
   );
 }
@@ -118,9 +136,18 @@ export default function AddUser() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#fff',
+    paddingTop:50,
+    // borderLeftWidth:20,
+    // borderLeftColor:"blue",
+    // borderTopWidth:20,
+    // borderTopColor:"tomato",
+    // borderRightWidth:20,
+    // borderRightColor:"blue",
+    // borderBottomWidth:20,
+    // borderBottomColor:"tomato",
+    backgroundColor:"#efefef"
   },
   header: {
     fontSize: 24,
@@ -142,9 +169,9 @@ const styles = StyleSheet.create({
   },
   button: {
     width: '80%',
-    backgroundColor: '#40916c',
+    backgroundColor: 'tomato',
     padding: 15,
-    borderRadius: 5,
+    borderRadius: 15,
     alignItems: 'center',
   },
   buttonText: {

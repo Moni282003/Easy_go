@@ -127,7 +127,7 @@ export default function EditUser() {
                 return;
               }
 
-              const updatedActivity = !worker.Activity; // Toggle the value
+              const updatedActivity = !worker.Activity; 
 
               const { error: updateError } = await supabase
                 .from('Worker')
@@ -258,7 +258,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   table: {
-    width: '90%',
+    width: '98%',
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 5,
@@ -305,7 +305,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#5bc0de',
   },
   adjust:{
-    marginLeft:25
+    marginLeft:15
   },
   adjust1:{
     marginLeft:10
@@ -378,6 +378,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#c8e6c9', 
   },
   inactiveRow: {
-    backgroundColor: '#ffcdd2', // Red color for inactive workers
+    backgroundColor: '#ffcdd2', 
   },
 });
