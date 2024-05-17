@@ -44,7 +44,7 @@ export default function AddUser() {
       }
 
       const currentDate = new Date();
-      const id = currentDate.getTime(); // Using timestamp as ID
+      const id = currentDate.getTime(); 
       const formattedDate = formatDate(currentDate);
       
       const { error: insertError } = await supabase
@@ -72,10 +72,8 @@ export default function AddUser() {
     const day = String(date.getDate()).padStart(2, '0');
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const year = date.getFullYear();
-    const hours = String(date.getHours()).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
-    const seconds = String(date.getSeconds()).padStart(2, '0');
-    return `${day}-${month}-${year} ${hours}:${minutes}:${seconds}`;
+   
+    return `${year}-${month}-${day}`;
   };
 
   return (

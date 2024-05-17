@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, Pressable, ToastAndroid, TextInput, Image } from 'react-native';
-import Entypo from '@expo/vector-icons/Entypo';
 import { supabase } from '../../util/supabase';
+
 export default function Place() {
   const [placeName, setPlaceName] = useState('');
   const [error, setError] = useState('');
@@ -23,14 +23,11 @@ export default function Place() {
         return;
       }
 
+      const createdAt = formatDate(new Date());
       const timestamp = new Date().getTime(); 
-      const createdAt = formatDate(new Date()); 
-      
       const { data, error: insertError } = await supabase
         .from('Places')
-        .insert([
-          { id: timestamp, created_at: createdAt, name: placeName },
-        ])
+        .insert([{id:timestamp, created_at: createdAt, name: placeName }])
         .select();
       
       if (insertError) {
@@ -45,13 +42,10 @@ export default function Place() {
   };
 
   const formatDate = (date) => {
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0');
     const year = date.getFullYear();
-    const hours = String(date.getHours()).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
-    const seconds = String(date.getSeconds()).padStart(2, '0');
-    return `${day}-${month}-${year} ${hours}:${minutes}:${seconds}`;
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
   };
 
   return (
