@@ -9,6 +9,7 @@ import { supabase } from '../../../util/supabase';
 export default function List() {
   const [row1,setRow1]=useState(0)
   const [row2,setRow2]=useState(0)
+  const [row3,setRow3]=useState(0)
   const [refreshing, setRefreshing] = useState(false);
   const navigation = useNavigation(); // Initialize navigation object
 
@@ -43,6 +44,15 @@ export default function List() {
       } else {
         setRow2(Places.length);
       }
+      let { data: Items, error2 } = await supabase
+      .from('AddItem')
+      .select('*');
+
+    if (error2) {
+      console.error(error.message);
+    } else {
+      setRow3(Items.length);
+    }
     } catch (error) {
       console.error(error.message);
     }
@@ -51,7 +61,7 @@ export default function List() {
   const categories = [
     { name: "List Places", backgroundColor: "#3b5998", icon: <MaterialIcons name="place" size={70} color="white" />, onPress: () => handlePress("List Places"), totalCount: row2 },
     { name: "List Category", backgroundColor: "#009688", icon: <FontAwesome5 name="th-list" size={70} color="white" />, onPress: () => handlePress("List Category"), totalCount: row1 },
-    { name: "List Items", backgroundColor: "#4CAF50", icon: <MaterialIcons name="add-shopping-cart" size={70} color="white" />, onPress: () => handlePress("List Items"), totalCount: 15 },
+    { name: "List Items", backgroundColor: "#4CAF50", icon: <MaterialIcons name="add-shopping-cart" size={70} color="white" />, onPress: () => handlePress("List Items"), totalCount: row3 },
     { name: "List Advertisement", backgroundColor: "#2196F3", icon: <MaterialCommunityIcons name="newspaper" size={70} color="white" />, onPress: () => handlePress("List Advertisement"), totalCount: 20 }
   ];
 
@@ -65,7 +75,7 @@ export default function List() {
         navigation.navigate('ViewCategory');
         break;
       case "List Items":
-        navigation.navigate('Items');
+        navigation.navigate('ViewItems');
         break;
       case "List Advertisement":
         navigation.navigate('Advertisement');

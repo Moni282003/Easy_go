@@ -7,7 +7,7 @@ export const AuthContext=createContext();
 export const AuthContextprovider=({children})=>{
     const [user,setUser]=useState(null);
     const [isAuth,SetIsAuth]=useState(undefined);
-
+    const [editName,setEditName]=useState('');
     useEffect(() => {
         const unsub = onAuthStateChanged(auth, (user) => {
             if (user) {
@@ -79,7 +79,7 @@ export const AuthContextprovider=({children})=>{
         }
     };
     return(
-        <AuthContext.Provider value={{user,isAuth,login,register,logout}}>
+        <AuthContext.Provider value={{user,isAuth,login,register,logout,editName,setEditName}}>
             {children}
         </AuthContext.Provider>
     )

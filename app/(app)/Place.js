@@ -72,7 +72,6 @@ export default function Place() {
         {error ? <Text style={{ color: 'red' }}>{error}</Text> : null}
       </View>
 
-      {/* Add Button */}
       <Pressable
         onPress={addPlace}
         style={{ backgroundColor: "#FF5733", alignItems: "center", justifyContent: "center", marginTop: 50, height: 50, borderRadius: 10, marginHorizontal: 20 }}
