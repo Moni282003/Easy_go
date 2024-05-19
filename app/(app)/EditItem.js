@@ -56,6 +56,9 @@ export default function EditItem() {
       Alert.alert('Error', 'Failed to update the item.');
       return;
     }
+    else{
+        Alert.alert('Success', 'Updated Sucessfully');
+    }
 
     setEditingFields((prev) => {
       const { [item.id]: _, ...rest } = prev;

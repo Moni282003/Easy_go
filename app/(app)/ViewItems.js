@@ -1,4 +1,4 @@
-import { View, Text, Pressable, TextInput } from 'react-native';
+import { View, Text, Pressable, TextInput, Alert, ScrollView } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { supabase } from '../../util/supabase';
@@ -26,7 +26,7 @@ export default function ViewItems() {
                 console.error(error.message);
             } else {
                 setNames(AddItem);
-                setFilteredNames(AddItem); 
+                setFilteredNames(AddItem);
             }
         } catch (error) {
             console.error(error.message);
@@ -47,65 +47,100 @@ export default function ViewItems() {
         );
     }, [search, categoryFilter, placeFilter, names]);
 
+    const handleDelete = async (itemName) => {
+        Alert.alert(
+            'Confirmation',
+            'Are you sure you want to delete this item?',
+            [
+                {
+                    text: 'Cancel',
+                    style: 'cancel',
+                },
+                {
+                    text: 'Delete',
+                    onPress: async () => {
+                        try {
+                            const { error } = await supabase.from('AddItem').delete().eq('Name', itemName);
+                            if (error) {
+                                console.error('Error deleting item:', error.message);
+                            } else {
+                                Alert.alert('Success', 'Item deleted successfully!');
+                                display(); // Reload data after deletion
+                            }
+                        } catch (error) {
+                            console.error('Error deleting item:', error.message);
+                        }
+                    },
+                },
+            ],
+            { cancelable: false }
+        );
+    };
+
     return (
-        <View style={{ flex: 1, padding: 20, paddingHorizontal: 0 }}>
-            <TextInput
-                style={{ height: 40, borderColor: 'gray', borderWidth: 1, marginBottom: 20, paddingHorizontal: 10, marginHorizontal: 20 }}
-                placeholder="Search by name"
-                value={search}
-                onChangeText={setSearch}
-            />
-            
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 10 }}>
+        <ScrollView style={{ flex: 1 }}>
+            <View style={{ padding: 20, paddingHorizontal: 0 }}>
                 <TextInput
-                    style={{ flex: 1, height: 40, borderColor: 'gray', borderWidth: 1, marginRight: 10, paddingHorizontal: 10 }}
-                    placeholder="Filter by category"
-                    value={categoryFilter}
-                    onChangeText={setCategoryFilter}
+                    style={{ height: 40, borderColor: 'gray', borderWidth: 1, marginBottom: 20, paddingHorizontal: 10, marginHorizontal: 20 }}
+                    placeholder="Search by name"
+                    value={search}
+                    onChangeText={setSearch}
                 />
-                <TextInput
-                    style={{ flex: 1, height: 40, borderColor: 'gray', borderWidth: 1, paddingHorizontal: 10 }}
-                    placeholder="Filter by place"
-                    value={placeFilter}
-                    onChangeText={setPlaceFilter}
-                />
-            </View>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', backgroundColor: 'blue', padding: 15, paddingHorizontal: 25, marginBottom: 10 }}>
-                <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 19 }}>SNO</Text>
-                <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 19 }}>NAME</Text>
-                <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 19 }}>ACTION</Text>
-            </View>
-            {filteredNames.length > 0 ? (
-                filteredNames.map((item, index) => (
-                    <View key={index} style={{backgroundColor: index % 2 === 0 ? '#bcbcbc' : 'white',padding:5,borderRadius:10}}>
-                    <View key={index} style={{  flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 10, paddingLeft: 30 }}>
-                        <Text style={{ width: '10%', textAlign: 'center',fontSize:17 }}>{index + 1}</Text>
-                        <Text style={{ width: '50%', textAlign: 'center', fontSize: 17, fontWeight: 'bold' }}>{item.Name}</Text>
-                        <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', width: '30%' }}>
-                            <Pressable style={{ padding: 5, backgroundColor: 'red', marginRight: 10, borderRadius: 7 }}>
-                                <AntDesign name="delete" size={24} color="white" />
-                            </Pressable>
-                            <Pressable
-                                style={{ padding: 5, backgroundColor: 'blue', borderRadius: 7 }}
-                                onPress={() =>{ 
-                                    setEditName(item.Name)
-                                    navigation.navigate('EditItem')}}
-                            >
-                                <Feather name="edit" size={24} color="white" />
-                            </Pressable>
+                
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 10 }}>
+                    <TextInput
+                        style={{ flex: 1, height: 40, borderColor: 'gray', borderWidth: 1, marginRight: 10, paddingHorizontal: 10 }}
+                        placeholder="Filter by category"
+                        value={categoryFilter}
+                        onChangeText={setCategoryFilter}
+                    />
+                    <TextInput
+                        style={{ flex: 1, height: 40, borderColor: 'gray', borderWidth: 1, paddingHorizontal: 10 }}
+                        placeholder="Filter by place"
+                        value={placeFilter}
+                        onChangeText={setPlaceFilter}
+                    />
+                </View>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', backgroundColor: 'blue', padding: 15, paddingHorizontal: 25, marginBottom: 10 }}>
+                    <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 19 }}>SNO</Text>
+                    <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 19 }}>NAME</Text>
+                    <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 19 }}>ACTION</Text>
+                </View>
+                {filteredNames.length > 0 ? (
+                    filteredNames.map((item, index) => (
+                        <View key={index} style={{backgroundColor: index % 2 === 0 ? '#bcbcbc' : 'white',padding:5,borderRadius:10}}>
+                            <View key={index} style={{  flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 10, paddingLeft: 30 }}>
+                                <Text style={{ width: '10%', textAlign: 'center',fontSize:17 }}>{index + 1}</Text>
+                                <Text style={{ width: '50%', textAlign: 'center', fontSize: 17, fontWeight: 'bold' }}>{item.Name}</Text>
+                                <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', width: '30%' }}>
+                                    <Pressable style={{ padding: 5, backgroundColor: 'red', marginRight: 10, borderRadius: 7 }}
+                                        onPress={() => handleDelete(item.Name)}
+                                    >
+                                        <AntDesign name="delete" size={24} color="white" />
+                                    </Pressable>
+                                    <Pressable
+                                        style={{ padding: 5, backgroundColor: 'blue', borderRadius: 7 }}
+                                        onPress={() => { 
+                                            setEditName(item.Name)
+                                            navigation.navigate('EditItem')
+                                        }}
+                                    >
+                                        <Feather name="edit" size={24} color="white" />
+                                    </Pressable>
+                                </View>
+                            </View>
+                            <View style={{flexDirection:"row",justifyContent:"space-evenly",marginTop:5}}>
+                                <View>
+                                    <Text style={{ textAlign: 'center', fontSize: 17 }}>Category: {item.Category}</Text>
+                                </View>
+                                <Text style={{ textAlign: 'center', fontSize: 17 }}>Place: {item.Place}</Text>
+                            </View>
                         </View>
-                    </View>
-                    <View style={{flexDirection:"row",justifyContent:"space-evenly",marginTop:5}}>
-                    <View>
-                    <Text style={{ textAlign: 'center', fontSize: 17 }}>Category: {item.Category}</Text>
-                    </View>
-                    <Text style={{  textAlign: 'center', fontSize: 17 }}>Place: {item.Place}</Text>
-                    </View>
-                    </View>
-                ))
-            ) : (
-                <Text style={{ textAlign: 'center', marginTop: 50, fontSize: 20, fontWeight: 'bold' }}>No Items found</Text>
-            )}
-        </View>
+                    ))
+                ) : (
+                    <Text style={{ textAlign: 'center', marginTop: 50, fontSize: 20, fontWeight: 'bold' }}>No Items found</Text>
+                )}
+            </View>
+        </ScrollView>
     );
 }

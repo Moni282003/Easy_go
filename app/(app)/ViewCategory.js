@@ -106,7 +106,6 @@ export default function ViewCategory() {
     category.Category.toLowerCase().includes(searchText.toLowerCase())
   );
 
-  // Sort categories alphabetically
   const sortedCategories = filteredCategories.sort((a, b) => a.Category.localeCompare(b.Category));
 
   return (
