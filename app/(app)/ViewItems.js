@@ -65,7 +65,7 @@ export default function ViewItems() {
                                 console.error('Error deleting item:', error.message);
                             } else {
                                 Alert.alert('Success', 'Item deleted successfully!');
-                                display(); // Reload data after deletion
+                                display();
                             }
                         } catch (error) {
                             console.error('Error deleting item:', error.message);

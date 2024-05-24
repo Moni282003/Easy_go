@@ -44,9 +44,39 @@ export default function ViewCategory() {
           {
             text: 'Delete',
             onPress: async () => {
-              const { error } = await supabase.from('Category').delete().eq('Category', categoryName);
-              if (error) {
-                console.error(error.message);
+              const { data: addItemData, error: addItemError } = await supabase.from('AddItem').select('Name').eq('Category', categoryName);
+              if (addItemError) {
+                console.error(addItemError.message);
+                return;
+              }
+              
+              const deleteAddItemPromises = addItemData.map(async item => {
+                const { error } = await supabase.from('AddItem').delete().eq('Name', item.Name);
+                if (error) {
+                  console.error(error.message);
+                }
+              });
+  
+              await Promise.all(deleteAddItemPromises);
+  
+              const { data: paymentData, error: paymentError } = await supabase.from('Payment').select('Name').in('Name', addItemData.map(item => item.Name));
+              if (paymentError) {
+                console.error(paymentError.message);
+                return;
+              }
+  
+              const deletePaymentPromises = paymentData.map(async payment => {
+                const { error } = await supabase.from('Payment').delete().eq('Name', payment.Name);
+                if (error) {
+                  console.error(error.message);
+                }
+              });
+  
+              await Promise.all(deletePaymentPromises);
+  
+              const { error: categoryError } = await supabase.from('Category').delete().eq('Category', categoryName);
+              if (categoryError) {
+                console.error(categoryError.message);
               } else {
                 setCategories(categories.filter(category => category.Category !== categoryName));
                 ToastAndroid.show('Category Deleted!', ToastAndroid.SHORT);
@@ -61,6 +91,7 @@ export default function ViewCategory() {
       console.error(error.message);
     }
   };
+  
 
   const handleUpdateConfirmation = () => {
     Alert.alert(
@@ -84,24 +115,38 @@ export default function ViewCategory() {
 
   const handleUpdate = async () => {
     try {
-      const { error } = await supabase.from('Category').update({ Category: updateCategory }).eq('Category', selectedCategory);
-      if (error) {
-        console.error(error.message);
+      const { error: categoryError } = await supabase
+        .from('Category')
+        .update({ Category: updateCategory })
+        .eq('Category', selectedCategory);
+      
+      if (categoryError) {
+        console.error(categoryError.message);
       } else {
-        setCategories(categories.map(category => {
-          if (category.Category === selectedCategory) {
-            return { ...category, Category: updateCategory };
-          }
-          return category;
-        }));
-        setUpdateModalVisible(false);
-        ToastAndroid.show('Category Updated!', ToastAndroid.SHORT);
+        const { error: addItemError } = await supabase
+          .from('AddItem')
+          .update({ Category: updateCategory })
+          .eq('Category', selectedCategory);
+        
+        if (addItemError) {
+          console.error(addItemError.message);
+        } else {
+          setCategories(categories.map(category => {
+            if (category.Category === selectedCategory) {
+              return { ...category, Category: updateCategory };
+            }
+            return category;
+          }));
+          
+          setUpdateModalVisible(false);
+          ToastAndroid.show('Category Updated!', ToastAndroid.SHORT);
+        }
       }
     } catch (error) {
       console.error(error.message);
     }
   };
-
+  
   const filteredCategories = categories.filter(category =>
     category.Category.toLowerCase().includes(searchText.toLowerCase())
   );

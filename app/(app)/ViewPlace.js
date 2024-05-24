@@ -44,12 +44,39 @@ export default function ViewPlace() {
           {
             text: 'Delete',
             onPress: async () => {
-              const { error } = await supabase.from('Places').delete().eq('name', name);
-              if (error) {
-                console.error(error.message);
-              } else {
+              try {
+                // Fetch the corresponding rows in AddItem
+                const { data: addItemData, error: fetchAddItemError } = await supabase.from('AddItem').select('Name').eq('Place', name);
+                if (fetchAddItemError) {
+                  throw fetchAddItemError;
+                }
+
+                // Delete from Payment table
+                const paymentDeletePromises = addItemData.map(async (item) => {
+                  const { error: deletePaymentError } = await supabase.from('Payment').delete().eq('Name', item.Name);
+                  if (deletePaymentError) {
+                    throw deletePaymentError;
+                  }
+                });
+
+                await Promise.all(paymentDeletePromises);
+
+                // Delete from AddItem table
+                const { error: deleteAddItemError } = await supabase.from('AddItem').delete().eq('Place', name);
+                if (deleteAddItemError) {
+                  throw deleteAddItemError;
+                }
+
+                // Delete from Places table
+                const { error: deletePlaceError } = await supabase.from('Places').delete().eq('name', name);
+                if (deletePlaceError) {
+                  throw deletePlaceError;
+                }
+
                 setPlaces(places.filter(place => place.name !== name));
                 ToastAndroid.show('Place Deleted!', ToastAndroid.SHORT);
+              } catch (error) {
+                console.error(error.message);
               }
             },
             style: 'destructive',
@@ -84,9 +111,11 @@ export default function ViewPlace() {
 
   const handleUpdate = async () => {
     try {
-      const { error } = await supabase.from('Places').update({ name: updateName }).eq('name', selectedPlaceName);
-      if (error) {
-        console.error(error.message);
+      const { error: updatePlaceError } = await supabase.from('Places').update({ name: updateName }).eq('name', selectedPlaceName);
+      const { error: updateAddItemError } = await supabase.from('AddItem').update({ Place: updateName }).eq('Place', selectedPlaceName);
+
+      if (updatePlaceError || updateAddItemError) {
+        console.error(updatePlaceError?.message || updateAddItemError?.message);
       } else {
         setPlaces(places.map(place => {
           if (place.name === selectedPlaceName) {
@@ -136,19 +165,18 @@ export default function ViewPlace() {
                   display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between", backgroundColor: index % 2 === 0 ? '#FFFFFF' : '#DDDDDD', height: 50
                 }}>
                   <Text style={{ paddingLeft: 40, fontSize: 18 }}>{index + 1}</Text>
-                  <Text style={{ fontSize: 18,marginLeft:25 }}>{item.name}</Text>
-                  <View style={{ flexDirection: "row",marginRight:10,gap:20}}>
-                    <Pressable onPress={() => handleDelete(item.name)} style={{ backgroundColor:"red",padding:5,borderRadius:5 }}>
+                  <Text style={{ fontSize: 18, marginLeft: 25 }}>{item.name}</Text>
+                  <View style={{ flexDirection: "row", marginRight: 10, gap: 20 }}>
+                    <Pressable onPress={() => handleDelete(item.name)} style={{ backgroundColor: "red", padding: 5, borderRadius: 5 }}>
                       <AntDesign name="delete" size={24} color="white" />
                     </Pressable>
                     <Pressable
-                    
-                    style={{backgroundColor:"blue",padding:5,borderRadius:5}}
-                    onPress={() => {
-                      setSelectedPlaceName(item.name);
-                      setUpdateName(item.name); 
-                      setUpdateModalVisible(true);
-                    }}>
+                      style={{ backgroundColor: "blue", padding: 5, borderRadius: 5 }}
+                      onPress={() => {
+                        setSelectedPlaceName(item.name);
+                        setUpdateName(item.name);
+                        setUpdateModalVisible(true);
+                      }}>
                       <AntDesign name="edit" size={24} color="white" />
                     </Pressable>
                   </View>

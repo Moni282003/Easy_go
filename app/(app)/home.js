@@ -7,10 +7,16 @@ import Stats from './Screens/Stats';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import Staff from './Screens/Staff';
 import Entypo from '@expo/vector-icons/Entypo';
+import { UseAuth } from '../../Context/UseAuth';
 
 const Tab = createMaterialTopTabNavigator();
 
 export default function Home() {
+
+const {type}=UseAuth();
+
+
+
   return (
     <Tab.Navigator
       screenOptions={{
@@ -25,11 +31,13 @@ export default function Home() {
             height:80,
             borderWidth:0,
             padding:8,
-            paddingBottom:0
-        },
+            paddingBottom:0,
+            paddingHorizontal: type ? 0 : '14%',
+          },
         tabBarIndicatorStyle: {
           backgroundColor: 'transparent' 
-        }
+        },
+        
       }}
     >
       <Tab.Screen
@@ -53,9 +61,12 @@ export default function Home() {
         component={Stats}
         options={{
           title: 'Payment',
-          tabBarIcon: ({ color, size }) => <Ionicons name="stats-chart" size={24} color={color} />, 
+          tabBarIcon: ({ color, size }) => <FontAwesome5 name="rupee-sign" size={24} color={color} />
         }}
       />
+
+{
+type &&
       <Tab.Screen
         name="Staff"
         component={Staff}
@@ -63,7 +74,9 @@ export default function Home() {
           title: 'Add Staff',
           tabBarIcon: ({ color, size }) => <Entypo name="add-user" size={24} color={color} />, 
         }}
-      />
+      />}
     </Tab.Navigator>
+    
+
   );
 }

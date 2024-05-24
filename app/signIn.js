@@ -1,25 +1,53 @@
 import React, { useState } from 'react';
-import { View, Image, TextInput, StyleSheet, KeyboardAvoidingView, TouchableOpacity, Text, Pressable, Platform, Alert } from 'react-native';
+import { View, Image, TextInput, StyleSheet, KeyboardAvoidingView, TouchableOpacity, Text, Alert, Platform } from 'react-native';
 import { MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
+import { useNavigation } from '@react-navigation/native'; // Import useNavigation from @react-navigation/native
 import { UseAuth } from '../Context/UseAuth';
+import { supabase } from '../util/supabase';
 
 export default function SignIn() {
-  const router = useRouter();
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
-  const { login } = UseAuth();
+  const { login, setType } = UseAuth();
+
+  const navigate = useNavigation();
 
   const handleLogin = async () => {
     if (!email || !pass) {
       Alert.alert("Sign In", "Please fill all the fields!");
       return;
     }
-    const response = await login(email, pass);
-    if (!response.success) {
-      Alert.alert("Sign In",response.msg);
-    }
-  }
+
+    const { data, error } = await supabase
+      .from('Worker')
+      .select('Username,Password,Activity')
+      .eq('Username', email)
+      .single();
+
+    if (!data) {
+      const response = await login(email, pass);
+      if (!response.success) {
+        Alert.alert("Sign In", response.msg);
+        setType(true);
+      }
+    } else {
+      if (error || !data || data.Password !== pass) {
+        Alert.alert("Authentication failed!", "Please check your credentials.");
+      } else {
+        if(data.Activity=="true"){
+        Alert.alert("Successful", "Authentication successful!");
+        setType(false);
+        navigate.navigate('(app)'); 
+      }
+        
+        else{
+          Alert.alert("Locked Account", "Your Account is inactive!");}
+          console.log(data.Activity)
+        }
+       
+      }
+    
+  };
 
   return (
     <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === "ios" ? "padding" : "height"}>
@@ -37,7 +65,7 @@ export default function SignIn() {
           <MaterialIcons name="email" size={24} color="black" />
           <TextInput
             style={styles.input}
-            placeholder='Email'
+            placeholder='Username'
             value={email}
             onChangeText={setEmail}
           />
@@ -50,7 +78,6 @@ export default function SignIn() {
             secureTextEntry={true}
             value={pass}
             onChangeText={setPass}
-            keyboardType="number-pad"
           />
         </View>
         <TouchableOpacity

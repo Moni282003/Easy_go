@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Pressable, ScrollView, RefreshControl } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { supabase } from '../../../util/supabase'; // Adjust the import based on your file structure
-
+import { supabase } from '../../../util/supabase'; 
 export default function Stats() {
     const navigation = useNavigation();
 
     const [paymentCount, setPaymentCount] = useState(0);
     const [addItemCount, setAddItemCount] = useState(0);
     const [priorityCount, setPriorityCount] = useState(0);
+    const [normalCount, setNormalCount] = useState(0);
+    const [priority, setPriority] = useState(0);
     const [refreshing, setRefreshing] = useState(false);
 
     const onRefresh = async () => {
@@ -40,12 +41,26 @@ export default function Stats() {
                 .eq('Plan', 'Priority')
                 .or(`End.is.null,End.lt.${formattedToday}`);
 
+                let { count: priority, error: priorityError } = await supabase
+                .from('Payment')
+                .select('*', { count: 'exact' })
+                .eq('Plan', 'Priority')
+            
+
             if (priorityCountError) throw priorityCountError;
+
+            let { count: normalCount, error: normalCountError } = await supabase
+                .from('Payment')
+                .select('*', { count: 'exact' })
+                .eq('Plan', 'Normal');
+
+            if (normalCountError) throw normalCountError;
 
             setPaymentCount(paymentCount);
             setAddItemCount(addItemCount);
             setPriorityCount(priorityCount);
-
+            setNormalCount(normalCount);
+            setPriority(priority);
         } catch (error) {
             console.error('Error fetching counts:', error.message);
         }
@@ -84,7 +99,9 @@ export default function Stats() {
                 </Pressable>
                 <Pressable style={{width:"80%",backgroundColor:"#55ff55",paddingHorizontal:50,borderRadius:20,paddingVertical:20,elevation:10,marginVertical:20}} onPress={navigateToPage2}>
                     <Text style={{color:"black",fontSize:25}}>Edit Plan</Text>
-                    <Text style={{color:"black",fontSize:25}}>Total count: {paymentCount}</Text>
+                    <Text style={{color:"black",fontSize:25}}>Priority count: {priority}</Text>
+                    <Text style={{color:"black",fontSize:25}}>Normal count: {normalCount}</Text>
+                    <Text style={{color:"black",fontSize:25}}>Total count: {normalCount+priority}</Text>
                 </Pressable>
                 <Pressable style={{width:"80%",backgroundColor:"#5555ff",paddingHorizontal:50,borderRadius:20,paddingVertical:20,elevation:10,marginVertical:20,marginLeft:0}} onPress={navigateToPage3}>
                     <Text style={{color:"black",fontSize:25}}>Payment</Text>

@@ -90,8 +90,8 @@ export default function AddPay() {
             </Pressable>
           </View>
           <View style={{ flexDirection: "row", alignItems: "center", marginLeft: 30, marginVertical: 10 }}>
-            <Text style={{ flex: 3, fontSize: 19, fontWeight: "bold", color: "blue" }}>Category: {item.Category}</Text>
-            <Text style={{ flex: 3, fontSize: 19, fontWeight: "bold", color: "blue" }}>Place: {item.Place}</Text>
+            <Text style={{ flex: 3, fontSize: 17, fontWeight: "bold", color: "blue" }}>Category: {item.Category}</Text>
+            <Text style={{ flex: 3, fontSize: 17, fontWeight: "bold", color: "blue" }}>Place: {item.Place}</Text>
           </View>
         </View>
       ))}

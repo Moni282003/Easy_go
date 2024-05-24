@@ -175,7 +175,7 @@ export default function EditPlan() {
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', backgroundColor: 'blue', padding: 15, paddingHorizontal: 25, marginBottom: 10 }}>
                     <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 19 }}>SNO</Text>
                     <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 19 }}>NAME</Text>
-                    <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 19 }}>ACTION</Text>
+                    <Text style={{ color: 'white', fontWeight:'bold', fontSize: 19 }}>ACTION</Text>
                 </View>
                 {filteredNames.length > 0 ? (
                     filteredNames.map((item, index) => (
@@ -199,27 +199,30 @@ export default function EditPlan() {
                                 <Text style={{ textAlign: 'center', fontSize: 17, color: "green" }}>Place: {item.Place}</Text>
                             </View>
                             {info
-                            .filter(plan => plan.Name === item.Name)
-                            .map((plan, idx) => (
-                                <View key={idx} style={{ flexDirection: "column", marginTop: 5, alignItems: "flex-start", paddingHorizontal: 10 }}>
-                                <View>
-                                    <View style={{ flexDirection: "row", marginTop: 5, gap: 90 }}>
-                                    <Text style={{ textAlign: 'center', fontSize: 17, fontWeight: "bold", color: "tomato" }}>Plan: {plan.Plan}</Text>
-                                    {plan.Plan === "Normal" ? (
-                                        <Text></Text>
-                                    ) : (
-                                        plan.End !== "0" && ( 
-                                        <Text style={{ textAlign: 'center', fontSize: 17, fontWeight: "bold", color: "tomato" }}>
-                                            Expire: {plan.End}
-                                        </Text>
-            )
-          )}
-        </View>
-      </View>
-      <Text style={{ textAlign: 'justify', fontSize: 17, color: "midnightblue" }}>Description: {plan.Des}</Text>
-    </View>
-  ))}
-
+                                .filter(plan => plan.Name === item.Name)
+                                .map((plan, idx) => (
+                                    <View key={idx} style={{ flexDirection: "column", marginTop: 5, alignItems: "flex-start", paddingHorizontal: 10 }}>
+                                        <View>
+                                            <View style={{ flexDirection: "row", marginTop: 5, gap: 90 }}>
+                                                <Text style={{ textAlign: 'center', fontSize: 17, fontWeight: "bold", color: "tomato" }}>Plan: {plan.Plan}</Text>
+                                                {plan.Plan === "Normal" ? (
+                                                    <Text></Text>
+                                                ) : (
+                                                    plan.End !== "null" ? (
+                                                        <Text style={{ textAlign: 'center', fontSize: 17, fontWeight: "bold", color: "tomato" }}>
+                                                            Expire: {plan.End}
+                                                        </Text>
+                                                    ) : (
+                                                        <Text style={{ textAlign: 'center', fontSize: 17, fontWeight: "bold", color: "tomato" }}>
+                                                            Expire: Not Paid
+                                                        </Text>
+                                                    )
+                                                )}
+                                            </View>
+                                        </View>
+                                        <Text style={{ textAlign: 'justify', fontSize: 17, color: "midnightblue" }}>Description: {plan.Des}</Text>
+                                    </View>
+                                ))}
                         </View>
                     ))
                 ) : (
@@ -261,3 +264,4 @@ export default function EditPlan() {
         </ScrollView>
     );
 }
+
