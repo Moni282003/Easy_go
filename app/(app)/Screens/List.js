@@ -10,6 +10,7 @@ export default function List() {
   const [row1,setRow1]=useState(0)
   const [row2,setRow2]=useState(0)
   const [row3,setRow3]=useState(0)
+  const [row4,setRow4]=useState(0);
   const [refreshing, setRefreshing] = useState(false);
   const navigation = useNavigation(); // Initialize navigation object
 
@@ -38,6 +39,10 @@ export default function List() {
       let { data: Places, error1 } = await supabase
         .from('Places')
         .select('*');
+        let { data: adv, error4 } = await supabase
+        .from('Adv')
+        .select('*');
+        setRow4(adv.length)
 
       if (error1) {
         console.error(error.message);
@@ -62,7 +67,7 @@ export default function List() {
     { name: "List Places", backgroundColor: "#3b5998", icon: <MaterialIcons name="place" size={70} color="white" />, onPress: () => handlePress("List Places"), totalCount: row2 },
     { name: "List Category", backgroundColor: "#009688", icon: <FontAwesome5 name="th-list" size={70} color="white" />, onPress: () => handlePress("List Category"), totalCount: row1 },
     { name: "List Items", backgroundColor: "#4CAF50", icon: <MaterialIcons name="add-shopping-cart" size={70} color="white" />, onPress: () => handlePress("List Items"), totalCount: row3 },
-    { name: "List Advertisement", backgroundColor: "#2196F3", icon: <MaterialCommunityIcons name="newspaper" size={70} color="white" />, onPress: () => handlePress("List Advertisement"), totalCount: 20 }
+    { name: "List Advertisement", backgroundColor: "#2196F3", icon: <MaterialCommunityIcons name="newspaper" size={70} color="white" />, onPress: () => handlePress("List Advertisement"), totalCount: row4 }
   ];
 
   const handlePress = (itemName) => {
@@ -78,7 +83,7 @@ export default function List() {
         navigation.navigate('ViewItems');
         break;
       case "List Advertisement":
-        navigation.navigate('Advertisement');
+        navigation.navigate('ViewAdvertisement');
         break;
       default:
         break;
@@ -86,8 +91,9 @@ export default function List() {
   };
 
   return (
-    <View style={{ backgroundColor: "#2C3E50", flex: 1 }}>
-      <Text style={{ textAlign: "center", fontSize: 25, fontWeight: "bold", marginVertical: 15, color: "#eeffee" }}>List in EasyGo</Text>
+    <View style={{ backgroundColor: "#dedede", flex: 1, borderWidth:2,
+    borderColor:"#ededed" }}>
+      <Text style={{ textAlign: "center", fontSize: 25, fontWeight: "bold", marginVertical: 15, color: "black" }}>List in EasyGo</Text>
       <FlatList
         data={categories}
         renderItem={({ item }) => (

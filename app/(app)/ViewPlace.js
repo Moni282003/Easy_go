@@ -113,6 +113,7 @@ export default function ViewPlace() {
     try {
       const { error: updatePlaceError } = await supabase.from('Places').update({ name: updateName }).eq('name', selectedPlaceName);
       const { error: updateAddItemError } = await supabase.from('AddItem').update({ Place: updateName }).eq('Place', selectedPlaceName);
+      const { error: updateAddItemError1 } = await supabase.from('Adv').update({ Place: updateName }).eq('Place', selectedPlaceName);
 
       if (updatePlaceError || updateAddItemError) {
         console.error(updatePlaceError?.message || updateAddItemError?.message);

@@ -61,6 +61,8 @@ export default function ViewItems() {
                     onPress: async () => {
                         try {
                             const { error } = await supabase.from('AddItem').delete().eq('Name', itemName);
+                            const { error1 } = await supabase.from('Adv').delete().eq('Name', itemName);
+                            const { error2 } = await supabase.from('Payment').delete().eq('Name', itemName);
                             if (error) {
                                 console.error('Error deleting item:', error.message);
                             } else {

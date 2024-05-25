@@ -9,7 +9,6 @@ export default function Setting() {
   const router = useRouter(); 
 
   const handleAddUser = () => {
-    // router.replace('signUp'); 
   };
 
   return (

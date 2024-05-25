@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, TextInput, Button, Alert, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, ScrollView, TextInput, Button, Alert, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { UseAuth } from '../../Context/UseAuth';
 import { supabase } from '../../util/supabase';
@@ -46,31 +46,60 @@ export default function EditItem() {
 
   const handleSave = async (item) => {
     const updates = editingFields[item.id];
-    let { data: updatedData, error } = await supabase
-      .from('AddItem')
-      .update(updates)
-      .eq('id', item.id)
-      .select();
-
-    if (error) {
+  
+    try {
+      // Update the AddItem table
+      const { data: updatedData, error: updateError } = await supabase
+        .from('AddItem')
+        .update(updates)
+        .eq('id', item.id)
+        .select();
+  
+      if (updateError) {
+        throw updateError;
+      }
+  
+      // Check if the name field is being updated
+      if (updates.Name && updates.Name !== item.Name) {
+        // Update the Payment table
+        const { error: paymentError } = await supabase
+          .from('Payment')
+          .update({ Name: updates.Name })
+          .eq('Name', item.Name);
+  
+        if (paymentError) {
+          throw paymentError;
+        }
+  
+        // Update the Adv table
+        const { error: advError } = await supabase
+          .from('Adv')
+          .update({ Name: updates.Name })
+          .eq('Name', item.Name);
+  
+        if (advError) {
+          throw advError;
+        }
+      }
+  
+      Alert.alert('Success', 'Updated successfully');
+  
+      setEditingFields((prev) => {
+        const { [item.id]: _, ...rest } = prev;
+        return rest;
+      });
+  
+      setData((prev) =>
+        prev.map((i) => (i.id === item.id ? { ...i, ...updates } : i))
+      );
+    } catch (error) {
       Alert.alert('Error', 'Failed to update the item.');
-      return;
+      console.error('Error updating item:', error);
     }
-    else{
-        Alert.alert('Success', 'Updated Sucessfully');
-    }
-
-    setEditingFields((prev) => {
-      const { [item.id]: _, ...rest } = prev;
-      return rest;
-    });
-
-    setData((prev) => 
-      prev.map((i) => (i.id === item.id ? { ...i, ...updates } : i))
-    );
   };
+  
 
-  const fieldsToExclude = ['OneImg', 'Place', 'Category', 'TwoImg', 'created_at']; // Fields to exclude from display
+  const fieldsToExclude = ['OneImg', 'Place', 'Category', 'TwoImg', 'created_at']; 
 
   return (
     <ScrollView style={styles.container}>
@@ -81,14 +110,15 @@ export default function EditItem() {
           <View key={index} style={[styles.itemContainer, { marginBottom: 40 }]}>
             <View style={{ flexDirection: "row", justifyContent: "space-evenly", marginBottom: 15 }}>
               <View style={{ backgroundColor: "midnightblue", flexDirection: "row", padding: 5, borderRadius: 5 }}>
-                <Text style={{ fontSize: 19, fontWeight: "bold", color: "white" }}>Category: </Text>
+                <Text style={{ fontSize: 19, fontWeight: "bold", color: "white" }}></Text>
                 <Text style={{ fontSize: 19, fontWeight: "bold", color: "white" }}>{item.Category}</Text>
               </View>
               <View style={{ backgroundColor: "midnightblue", flexDirection: "row", padding: 5, borderRadius: 5 }}>
-                <Text style={{ fontSize: 19, fontWeight: "bold", color: "white" }}>Place: </Text>
+                <Text style={{ fontSize: 19, fontWeight: "bold", color: "white" }}></Text>
                 <Text style={{ fontSize: 19, fontWeight: "bold", color: "white" }}>{item.Place}</Text>
               </View>
             </View>
+            
             {Object.keys(item).map((key) => (
               !fieldsToExclude.includes(key) && key !== 'id' && key !== 'Category' && key !== 'Place' && (
                 <View key={key} style={styles.fieldContainer}>

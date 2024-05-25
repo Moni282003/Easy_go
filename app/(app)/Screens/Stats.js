@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, Pressable, ScrollView, RefreshControl } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { supabase } from '../../../util/supabase'; 
-export default function Stats() {
-    const navigation = useNavigation();
 
+const Stats = () => {
+    const navigation = useNavigation();
     const [paymentCount, setPaymentCount] = useState(0);
     const [addItemCount, setAddItemCount] = useState(0);
     const [priorityCount, setPriorityCount] = useState(0);
@@ -17,6 +17,8 @@ export default function Stats() {
         await fetchCounts();
         setRefreshing(false);
     };
+
+   
 
     const fetchCounts = async () => {
         try {
@@ -41,13 +43,14 @@ export default function Stats() {
                 .eq('Plan', 'Priority')
                 .or(`End.is.null,End.lt.${formattedToday}`);
 
-                let { count: priority, error: priorityError } = await supabase
+            if (priorityCountError) throw priorityCountError;
+
+            let { count: priority, error: priorityError } = await supabase
                 .from('Payment')
                 .select('*', { count: 'exact' })
-                .eq('Plan', 'Priority')
-            
+                .eq('Plan', 'Priority');
 
-            if (priorityCountError) throw priorityCountError;
+            if (priorityError) throw priorityError;
 
             let { count: normalCount, error: normalCountError } = await supabase
                 .from('Payment')
@@ -81,33 +84,39 @@ export default function Stats() {
     const navigateToPage3 = () => {
         navigation.navigate('AddPay'); 
     };
+    const navigateToPage4 = () => {
+        navigation.navigate('Statistic'); 
+    };
 
+   
     return (
         <ScrollView
-            style={{ backgroundColor: "#2C3E50", flex: 1 }}
-            refreshControl={
-                <RefreshControl
-                    refreshing={refreshing}
-                    onRefresh={onRefresh}
-                />
-            }
+            style={{ backgroundColor: "#dedede", flex: 1, borderWidth: 2, borderColor: "#ededed" }}
+            refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
         >
-            <View style={{ justifyContent: 'center', alignItems: 'center',marginTop:40 }}>
-                <Pressable style={{width:"80%",backgroundColor:"#ff5555",paddingHorizontal:50,borderRadius:20,paddingVertical:20,elevation:10,marginVertical:20,marginLeft:0}} onPress={navigateToPage1}>
-                    <Text style={{color:"black",fontSize:25}}>Add Plan</Text>
-                    <Text style={{color:"black",fontSize:25}}>Total count: {addItemCount-paymentCount}</Text>
+            
+            <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: 40 }}>
+                <Pressable style={{ width: "80%", backgroundColor: "#ff5555", paddingHorizontal: 50, borderRadius: 20, paddingVertical: 20, elevation: 10, marginVertical: 20, marginLeft: 0 }} onPress={navigateToPage1}>
+                    <Text style={{ color: "black", fontSize: 25 }}>Add Plan</Text>
+                    <Text style={{ color: "black", fontSize: 25 }}>Total count: {addItemCount - paymentCount}</Text>
                 </Pressable>
-                <Pressable style={{width:"80%",backgroundColor:"#55ff55",paddingHorizontal:50,borderRadius:20,paddingVertical:20,elevation:10,marginVertical:20}} onPress={navigateToPage2}>
-                    <Text style={{color:"black",fontSize:25}}>Edit Plan</Text>
-                    <Text style={{color:"black",fontSize:25}}>Priority count: {priority}</Text>
-                    <Text style={{color:"black",fontSize:25}}>Normal count: {normalCount}</Text>
-                    <Text style={{color:"black",fontSize:25}}>Total count: {normalCount+priority}</Text>
+                <Pressable style={{ width: "80%", backgroundColor: "#55ff55", paddingHorizontal: 50, borderRadius: 20, paddingVertical: 20, elevation: 10, marginVertical: 20 }} onPress={navigateToPage2}>
+                    <Text style={{ color: "black", fontSize: 25 }}>Edit Plan</Text>
+                    <Text style={{ color: "black", fontSize: 25 }}>Priority count: {priority}</Text>
+                    <Text style={{ color: "black", fontSize: 25 }}>Normal count: {normalCount}</Text>
+                    <Text style={{ color: "black", fontSize: 25 }}>Total count: {normalCount + priority}</Text>
                 </Pressable>
-                <Pressable style={{width:"80%",backgroundColor:"#5555ff",paddingHorizontal:50,borderRadius:20,paddingVertical:20,elevation:10,marginVertical:20,marginLeft:0}} onPress={navigateToPage3}>
-                    <Text style={{color:"black",fontSize:25}}>Payment</Text>
-                    <Text style={{color:"black",fontSize:25}}>Total count: {priorityCount}</Text>
+                <Pressable style={{ width: "80%", backgroundColor: "#5555ff", paddingHorizontal: 50, borderRadius: 20, paddingVertical: 20, elevation: 10, marginVertical: 20, marginLeft: 0 }} onPress={navigateToPage3}>
+                    <Text style={{ color: "black", fontSize: 25 }}>Payment</Text>
+                    <Text style={{ color: "black", fontSize: 25 }}>Total count: {priorityCount}</Text>
+                </Pressable>
+                <Pressable style={{ width: "80%", backgroundColor: "#5555ff", paddingHorizontal: 50, borderRadius: 20, paddingVertical: 20, elevation: 10, marginVertical: 20, marginLeft: 0 }} onPress={navigateToPage4}>
+                    <Text style={{ color: "black", fontSize: 25 }}>Stats</Text>
+                    <Text style={{ color: "black", fontSize: 25 }}></Text>
                 </Pressable>
             </View>
         </ScrollView>
     );
-}
+};
+
+export default Stats;

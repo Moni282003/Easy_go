@@ -36,8 +36,9 @@ export default function Category() {
   };
 
   return (
-    <View style={{ backgroundColor: "#2C3E50", flex: 1 }}>
-      <Text style={{ textAlign: "center", fontSize: 25, fontWeight: "bold", marginVertical: 15, color: "white" }}>Add in EasyGo</Text>
+    <View style={{ backgroundColor: "#dedede", flex: 1, borderWidth:2,
+    borderColor:"#ededed" }}>
+      <Text style={{ textAlign: "center", fontSize: 25, fontWeight: "bold", marginVertical: 15, color: "black" }}>Add in EasyGo</Text>
       <FlatList
         data={categories}
         renderItem={({ item }) => (

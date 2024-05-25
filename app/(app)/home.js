@@ -8,6 +8,7 @@ import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import Staff from './Screens/Staff';
 import Entypo from '@expo/vector-icons/Entypo';
 import { UseAuth } from '../../Context/UseAuth';
+import Setting from './Screens/Setting';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -75,6 +76,10 @@ type &&
           tabBarIcon: ({ color, size }) => <Entypo name="add-user" size={24} color={color} />, 
         }}
       />}
+      
+  
+
+
     </Tab.Navigator>
     
 
