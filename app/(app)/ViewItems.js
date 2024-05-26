@@ -103,45 +103,48 @@ export default function ViewItems() {
                         onChangeText={setPlaceFilter}
                     />
                 </View>
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between', backgroundColor: 'blue', padding: 15, paddingHorizontal: 25, marginBottom: 10 }}>
-                    <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 19 }}>SNO</Text>
-                    <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 19 }}>NAME</Text>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', backgroundColor: 'midnightblue', padding: 15, paddingHorizontal: 25,marginTop:30,
+                borderRadius:30,borderBottomLeftRadius:0,borderBottomRightRadius:0,marginLeft:"3%",width:"94%" }}>
+                    <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 19,paddingLeft:20 }}>NAME</Text>
                     <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 19 }}>ACTION</Text>
                 </View>
                 {filteredNames.length > 0 ? (
-                    filteredNames.map((item, index) => (
-                        <View key={index} style={{backgroundColor: index % 2 === 0 ? '#bcbcbc' : 'white',padding:5,borderRadius:10}}>
-                            <View key={index} style={{  flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 10, paddingLeft: 30 }}>
-                                <Text style={{ width: '10%', textAlign: 'center',fontSize:17 }}>{index + 1}</Text>
-                                <Text style={{ width: '50%', textAlign: 'center', fontSize: 17, fontWeight: 'bold' }}>{item.Name}</Text>
-                                <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', width: '30%' }}>
-                                    <Pressable style={{ padding: 5, backgroundColor: 'red', marginRight: 10, borderRadius: 7 }}
-                                        onPress={() => handleDelete(item.Name)}
-                                    >
-                                        <AntDesign name="delete" size={24} color="white" />
-                                    </Pressable>
-                                    <Pressable
-                                        style={{ padding: 5, backgroundColor: 'blue', borderRadius: 7 }}
-                                        onPress={() => { 
-                                            setEditName(item.Name)
-                                            navigation.navigate('EditItem')
-                                        }}
-                                    >
-                                        <Feather name="edit" size={24} color="white" />
-                                    </Pressable>
-                                </View>
-                            </View>
-                            <View style={{flexDirection:"row",justifyContent:"space-evenly",marginTop:5}}>
-                                <View>
-                                    <Text style={{ textAlign: 'center', fontSize: 17 }}>Category: {item.Category}</Text>
-                                </View>
-                                <Text style={{ textAlign: 'center', fontSize: 17 }}>Place: {item.Place}</Text>
-                            </View>
-                        </View>
-                    ))
-                ) : (
-                    <Text style={{ textAlign: 'center', marginTop: 50, fontSize: 20, fontWeight: 'bold' }}>No Items found</Text>
-                )}
+    filteredNames.map((item, index) => (
+        <View key={index} style={{backgroundColor: index % 2 === 0 ? '#bcbcbc' : 'white',padding:0,borderBottomLeftRadius:index === filteredNames.length - 1 ? 20 : 0,marginLeft:"3%",width:"94%",marginTop:10,paddingVertical:12,borderWidth:1
+        ,borderBottomRightRadius:index === filteredNames.length - 1 ? 20 :0
+        }}>
+
+            <View key={index} style={{  flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 10, paddingLeft: 30 }}>
+                <Text style={{ width: '50%', textAlign: 'left', fontSize: 20, fontWeight: 'bold',marginLeft:20 }}>{item.Name}</Text>
+                <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', width: '30%' }}>
+                    <Pressable style={{ padding: 5, backgroundColor: 'red', marginRight: 10, borderRadius: 7 }}
+                        onPress={() => handleDelete(item.Name)}
+                    >
+                        <AntDesign name="delete" size={24} color="white" />
+                    </Pressable>
+                    <Pressable
+                        style={{ padding: 5, backgroundColor: 'blue', borderRadius: 7 }}
+                        onPress={() => { 
+                            setEditName(item.Name)
+                            navigation.navigate('EditItem')
+                        }}
+                    >
+                        <Feather name="edit" size={24} color="white" />
+                    </Pressable>
+                </View>
+            </View>
+            <View style={{flexDirection:"row",justifyContent:"space-evenly",marginTop:5}}>
+                <View>
+                    <Text style={{ textAlign: 'center', fontSize: 17 ,backgroundColor:"red", padding:4,borderRadius:8,color:"white" }}>Category: {item.Category}</Text>
+                </View>
+                <Text style={{ textAlign: 'center', fontSize: 17,backgroundColor:"blue", padding:4,borderRadius:8,color:"white" }}>Place: {item.Place}</Text>
+            </View>
+        </View>
+    ))
+) : (
+    <Text style={{ textAlign: 'center', marginTop: 50, fontSize: 20, fontWeight: 'bold' }}>No Items found</Text>
+)}
+
             </View>
         </ScrollView>
     );

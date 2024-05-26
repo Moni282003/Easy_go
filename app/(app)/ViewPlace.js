@@ -1,5 +1,5 @@
-import { ActivityIndicator, Alert, Button, FlatList, Modal, Pressable, ScrollView, Text, TextInput, ToastAndroid, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
+import { ActivityIndicator, Alert, Button, FlatList, Modal, Pressable, ScrollView, Text, TextInput, ToastAndroid, View } from 'react-native';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { supabase } from '../../util/supabase';
 
@@ -10,16 +10,17 @@ export default function ViewPlace() {
   const [selectedPlaceName, setSelectedPlaceName] = useState('');
   const [updateModalVisible, setUpdateModalVisible] = useState(false);
   const [updateName, setUpdateName] = useState('');
+  const [placeCounts, setPlaceCounts] = useState({});
 
   useEffect(() => {
     async function fetchPlaces() {
       try {
         const { data, error } = await supabase.from('Places').select('name');
-
         if (error) {
           console.error(error.message);
         } else {
           setPlaces(data);
+          fetchPlaceCounts(data);
         }
       } catch (error) {
         console.error(error.message);
@@ -29,6 +30,18 @@ export default function ViewPlace() {
     }
     fetchPlaces();
   }, []);
+
+  const fetchPlaceCounts = async (placesData) => {
+    const counts = {};
+    for (const place of placesData) {
+      const { count } = await supabase.from('AddItem').select('*', { count: 'exact' }).eq('Place', place.name);
+      counts[place.name] = count || 0; 
+    }
+    console.log(counts)
+    setPlaceCounts(counts);
+    console.log(placesData)
+  };
+  
 
   const handleDelete = async (name) => {
     try {
@@ -45,13 +58,11 @@ export default function ViewPlace() {
             text: 'Delete',
             onPress: async () => {
               try {
-                // Fetch the corresponding rows in AddItem
                 const { data: addItemData, error: fetchAddItemError } = await supabase.from('AddItem').select('Name').eq('Place', name);
                 if (fetchAddItemError) {
                   throw fetchAddItemError;
                 }
 
-                // Delete from Payment table
                 const paymentDeletePromises = addItemData.map(async (item) => {
                   const { error: deletePaymentError } = await supabase.from('Payment').delete().eq('Name', item.Name);
                   if (deletePaymentError) {
@@ -61,13 +72,11 @@ export default function ViewPlace() {
 
                 await Promise.all(paymentDeletePromises);
 
-                // Delete from AddItem table
                 const { error: deleteAddItemError } = await supabase.from('AddItem').delete().eq('Place', name);
                 if (deleteAddItemError) {
                   throw deleteAddItemError;
                 }
 
-                // Delete from Places table
                 const { error: deletePlaceError } = await supabase.from('Places').delete().eq('name', name);
                 if (deletePlaceError) {
                   throw deletePlaceError;
@@ -137,8 +146,8 @@ export default function ViewPlace() {
   );
 
   return (
-    <View style={{ flex: 1 }}>
-      <Text style={{ textAlign: "center", marginTop: 20, fontSize: 20, fontWeight: "bold" }}>LIST OF PLACES</Text>
+    <View style={{ flex: 1, backgroundColor: "white", paddingBottom: 50 }}>
+      <Text style={{ textAlign: "center", marginTop: 20, fontSize: 20, fontWeight: "bold", backgroundColor: "midnightblue", padding: 8, width: "70%", marginLeft: "15%", borderRadius: 15, color: "white" }}>LIST OF PLACES</Text>
       <View style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-evenly", marginTop: 40 }}>
         <TextInput
           placeholder='Search'
@@ -147,9 +156,8 @@ export default function ViewPlace() {
           onChangeText={setSearchText}
         />
       </View>
-      <View style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginTop: 40, backgroundColor: "#2222ff", gap: 80 }}>
-        <Text style={{ paddingLeft: 30, fontSize: 20, color: "white", fontWeight: "bold" }}>SNO</Text>
-        <Text style={{ fontSize: 20, color: "white", fontWeight: "bold"}}>NAME</Text>
+      <View style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginTop: 40, backgroundColor: "midnightblue", gap: 80, height: 50, borderTopLeftRadius: 20, borderTopRightRadius: 20, marginLeft: 10, marginRight: 10, borderWidth: 1, borderColor: "midnightblue" }}>
+        <Text style={{ fontSize: 20, color: "white", fontWeight: "bold", paddingLeft: 55 }}>NAME</Text>
         <Text style={{ paddingRight: 30, fontSize: 20, color: "white", fontWeight: "bold" }}>ACTION</Text>
       </View>
       {loading ? (
@@ -162,60 +170,67 @@ export default function ViewPlace() {
               keyExtractor={(item, index) => index.toString()}
               renderItem={({ item, index }) => (
                 <View style={{
-                  borderBottomWidth: 1,
-                  display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between", backgroundColor: index % 2 === 0 ? '#FFFFFF' : '#DDDDDD', height: 50
+                marginLeft: 10,
+                marginRight: 10,
+                borderLeftWidth: 1,
+                borderRightWidth: 1,
+                borderBottomWidth: 1,
+                display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between",
+                backgroundColor: index % 2 === 0 ? '#FFFFFF' : '#DDDDDD',
+                height: 50,
+                borderBottomLeftRadius: index === filteredPlaces.length - 1 ? 20 : 0,
+                borderBottomRightRadius: index === filteredPlaces.length - 1 ? 20 : 0,
                 }}>
-                  <Text style={{ paddingLeft: 40, fontSize: 18 }}>{index + 1}</Text>
-                  <Text style={{ fontSize: 18, marginLeft: 25 }}>{item.name}</Text>
-                  <View style={{ flexDirection: "row", marginRight: 10, gap: 20 }}>
-                    <Pressable onPress={() => handleDelete(item.name)} style={{ backgroundColor: "red", padding: 5, borderRadius: 5 }}>
-                      <AntDesign name="delete" size={24} color="white" />
-                    </Pressable>
-                    <Pressable
-                      style={{ backgroundColor: "blue", padding: 5, borderRadius: 5 }}
-                      onPress={() => {
-                        setSelectedPlaceName(item.name);
-                        setUpdateName(item.name);
-                        setUpdateModalVisible(true);
-                      }}>
-                      <AntDesign name="edit" size={24} color="white" />
-                    </Pressable>
-                  </View>
+                <Text style={{ fontSize: 18, marginLeft: 55 }}>{item.name}({placeCounts[item.name]})</Text>
+                <View style={{ flexDirection: "row", marginRight: 10, gap: 20 }}>
+                <Pressable onPress={() => handleDelete(item.name)} style={{ backgroundColor: "red", padding: 5, borderRadius: 5 }}>
+                <AntDesign name="delete" size={24} color="white" />
+                </Pressable>
+                <Pressable
+                style={{ backgroundColor: "blue", padding: 5, borderRadius: 5 }}
+                onPress={() => {
+                setSelectedPlaceName(item.name);
+                setUpdateName(item.name);
+                setUpdateModalVisible(true);
+                }}>
+                <AntDesign name="edit" size={24} color="white" />
+                </Pressable>
                 </View>
-              )}
-            />
-          ) : (
-            <Text
-              style={{ textAlign: "center", fontSize: 20, marginTop: 200 }}
-            >
-              No Results Found
-            </Text>
-          )}
-        </ScrollView>
-      )}
-      <Modal
-        animationType="fade"
-        transparent={true}
-        visible={updateModalVisible}
-        onRequestClose={() => {
-          setUpdateModalVisible(false);
-        }}
-      >
-        <View style={{ flex: 1, justifyContent: "flex-end", backgroundColor: "rgba(0,0,0,0.5)" }}>
-          <View style={{ backgroundColor: "white", padding: 20, borderTopLeftRadius: 10, borderTopRightRadius: 10 }}>
-            <TextInput
-              placeholder="Enter new name"
-              value={updateName}
-              onChangeText={setUpdateName}
-              style={{ borderWidth: 1, borderColor: "gray", padding: 10, borderRadius: 5, marginBottom: 20 }}
-            />
-            <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-              <Button title="Cancel" onPress={() => setUpdateModalVisible(false)} />
-              <Button title="Update" onPress={handleUpdateConfirmation} />
-            </View>
-          </View>
-        </View>
-      </Modal>
-    </View>
-  );
-}
+                </View>
+                )}
+                />
+                ) : (
+                <Text
+                style={{ textAlign: "center", fontSize: 20, marginTop: 200 }}
+                >
+                No Results Found
+                </Text>
+                )}
+                </ScrollView>
+                )}
+                <Modal
+                animationType="fade"
+                transparent={true}
+                visible={updateModalVisible}
+                onRequestClose={() => {
+                setUpdateModalVisible(false);
+                }}
+                >
+                <View style={{ flex: 1, justifyContent: "flex-end", backgroundColor: "rgba(0,0,0,0.5)" }}>
+                <View style={{ backgroundColor: "white", padding: 20, borderTopLeftRadius: 10, borderTopRightRadius: 10 }}>
+                <TextInput
+                placeholder="Enter new name"
+                value={updateName}
+                onChangeText={setUpdateName}
+                style={{ borderWidth: 1, borderColor: "gray", padding: 10, borderRadius: 5, marginBottom: 20 }}
+                />
+                <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+                <Button title="Cancel" onPress={() => setUpdateModalVisible(false)} />
+                <Button title="Update" onPress={handleUpdateConfirmation} />
+                </View>
+                </View>
+                </View>
+                </Modal>
+                </View>
+                );
+                }

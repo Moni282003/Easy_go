@@ -76,9 +76,7 @@ export default function ViewAdvertisement() {
 
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.title}>
-        View Advertisement
-      </Text>
+            <Text style={{ textAlign: "center", marginTop: 20, fontSize: 20, fontWeight: "bold", backgroundColor: "midnightblue", padding: 8, width: "70%", marginLeft: "15%", borderRadius: 15, color: "white" }}>LIST OF ADV</Text>
 
       <TextInput
         style={styles.searchInput}

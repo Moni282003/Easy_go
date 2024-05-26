@@ -12,6 +12,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import LottieView from 'lottie-react-native';
 
 
 
@@ -74,6 +75,7 @@ export default function Items() {
     return mapUrlRegex.test(mapURL);
   };
   const additem = async () => {
+    setLoading(true)
 
 if(name && address && phone && email && url && mapURL && day && Time ){
 
@@ -94,8 +96,6 @@ if(name && address && phone && email && url && mapURL && day && Time ){
       setImages([]);
     } catch (error) {
       console.error('Error uploading images:', error.message);
-
-
     }
     try {
       const { data: existingPlaces, error: fetchError } = await supabase
@@ -105,11 +105,14 @@ if(name && address && phone && email && url && mapURL && day && Time ){
       
       if (fetchError) {
         console.error(fetchError.message);
+        setLoading(false)
         return;
       }
 
       if (existingPlaces.length > 0) {
+        setLoading(false)
         return;
+
       }
 
       const createdAt = formatDate(new Date());
@@ -121,6 +124,7 @@ if(name && address && phone && email && url && mapURL && day && Time ){
       
       if (insertError) {
         console.error(insertError.message);
+        setLoading(false)
       } else {
         ToastAndroid.show('Item added!', ToastAndroid.SHORT);
         setAddress('');
@@ -136,13 +140,16 @@ if(name && address && phone && email && url && mapURL && day && Time ){
         setImages([])
         setName('')
         setURL('')
+        setLoading(false)
       }
     } catch (error) {
       console.error(error.message);
+      setLoading(false)
     }
   }
   else{
     Alert.alert("Fill Records","Please fill all the records")
+    setLoading(false)
   }
   };
   
@@ -188,9 +195,13 @@ if(name && address && phone && email && url && mapURL && day && Time ){
   }, [mapURL]);
 
   return (
-    <ScrollView style={{ flex: 1, padding: 20}}>
-      <View style={{ display: 'flex', flexDirection: 'column', gap: 15 }}>
+    <ScrollView style={{ flex: 1, padding: 20,backgroundColor:"white"}}>
+ <View style={{flexDirection:"row",justifyContent:"center",alignItems:"center",backgroundColor:"midnightblue",width:"70%",marginLeft:"15%",padding:0,borderRadius:45,marginBottom:20,marginTop:20,borderTopRightRadius:10,borderBottomLeftRadius:10,elevation:10}}>
+      <LottieView style={{width:50,height:50}} source={require('../../util/Animation - 1716706724949.json')} autoPlay loop />
+      <Text style={{ textAlign: "center", fontSize: 25, fontWeight: "bold", marginVertical: 15, color: "white" }}>Add items</Text></View>      
+        <View style={{ display: 'flex', flexDirection: 'column', gap: 15 }}>
         <Text style={{ color: "gray", fontSize: 20, fontWeight: "bold" }}>Select Place:</Text>
+        <View style={{borderWidth:2,borderRadius:10,padding:5,paddingBottom:20}}>
         <Picker
           style={{ height: 40, width: "100%", backgroundColor: 'white' }}
           selectedValue={selectedPlace}
@@ -200,11 +211,12 @@ if(name && address && phone && email && url && mapURL && day && Time ){
           {places.map((place, index) => (
             <Picker.Item key={index} label={place} value={place} />
           ))}
-        </Picker>
+        </Picker></View>
       </View>
 
-      <View style={{ display: 'flex', flexDirection: 'column', marginTop: 50, gap: 15 }}>
+      <View style={{ display: 'flex', flexDirection: 'column', marginTop: 20, gap: 15 }}>
         <Text style={{ color: "gray", fontSize: 20, fontWeight: "bold" }}>Select Category:</Text>
+        <View style={{borderWidth:2,borderRadius:10,padding:5,paddingBottom:20}}>
         <Picker
           style={{ height: 40, width: "100%", backgroundColor: 'white' }}
           selectedValue={selectedCategory}
@@ -214,12 +226,12 @@ if(name && address && phone && email && url && mapURL && day && Time ){
           {categories.map((category, index) => (
             <Picker.Item key={index} label={category} value={category} />
           ))}
-        </Picker>
+        </Picker></View>
       </View>
 
-      <View>
-        <Text style={{ marginTop: 40, color: "gray", fontSize: 20, fontWeight: "bold",marginBottom:10 }}>Name:</Text>
-        <View style={{ display: "flex", flexDirection: "row", width: "100%", alignItems: "center", gap: 10, borderColor: 'gray', borderWidth: 1, height: 50, borderRadius: 10, padding: 7, backgroundColor: "white" }}>
+      <View style={{position:"relative"}}>
+        <Text style={{ color: "gray", fontSize: 20, fontWeight: "bold",marginBottom:10,position:"absolute",zIndex:999,marginTop:25,marginLeft:15,backgroundColor:"white" }}>Name:</Text>
+        <View style={{ display: "flex", flexDirection: "row", width: "100%", alignItems: "center", gap: 10, borderColor: 'gray', borderWidth: 2, height: 90, borderRadius: 10, padding: 7, backgroundColor: "white",marginTop: 40 }}>
         <MaterialIcons name="category" size={27} color="gray" />
         <TextInput
             style={{
@@ -235,9 +247,9 @@ if(name && address && phone && email && url && mapURL && day && Time ){
         </View>
       </View>
 
-      <View>
-        <Text style={{ marginTop: 40, color: "gray", fontSize: 20, fontWeight: "bold",marginBottom:10 }}>Address:</Text>
-        <View style={{ display: "flex", flexDirection: "row", width: "100%", alignItems: "center", gap: 10, borderColor: 'gray', borderWidth: 1, borderRadius: 10, padding: 7, backgroundColor: "white" }}>
+      <View style={{position:"relative"}}>
+        <Text style={{ marginTop: 40, color: "gray", fontSize: 20, fontWeight: "bold",marginBottom:10,position:"absolute",marginTop:25,marginLeft:15,zIndex:999,backgroundColor:"white" }}>Address:</Text>
+        <View style={{ display: "flex", flexDirection: "row", width: "100%", alignItems: "center", gap: 10, borderColor: 'gray', borderWidth: 2, borderRadius: 10, padding: 7, backgroundColor: "white",marginTop: 40 }}>
           <Entypo name="address" size={27} color="gray" />
           <TextInput
             style={{ flex: 1, height: 100, fontSize: 18 }}
@@ -249,9 +261,9 @@ if(name && address && phone && email && url && mapURL && day && Time ){
         </View>
       </View>
 
-      <View>
-        <Text style={{ marginTop: 40, color: "gray", fontSize: 20, fontWeight: "bold",marginBottom:10 }}>Phone:</Text>
-        <View style={{ display: "flex", flexDirection: "row", width: "100%", alignItems: "center", gap: 10, borderColor: 'gray', borderWidth: 1, height: 50, borderRadius: 10, padding: 7, backgroundColor: "white" }}>
+      <View style={{position:"relative"}}>
+        <Text style={{ marginTop: 40, color: "gray", fontSize: 20, fontWeight: "bold",marginBottom:10,position:"absolute",marginTop:25,marginLeft:15,zIndex:999,backgroundColor:"white" }}>Phone:</Text>
+        <View style={{ display: "flex", flexDirection: "row", width: "100%", alignItems: "center", gap: 10, borderColor: 'gray', borderWidth: 2, height: 70, borderRadius: 10, padding: 7, backgroundColor: "white",marginTop: 40 }}>
         <Feather name="phone-call" size={27} color="gray" />          
         <TextInput
             style={{ width: "89%", height: 40, paddingLeft: 10, fontSize: 18 }}
@@ -262,9 +274,9 @@ if(name && address && phone && email && url && mapURL && day && Time ){
             />
             </View>
             </View>
-            <View>
-    <Text style={{ marginTop: 40, color: "gray", fontSize: 20, fontWeight: "bold",marginBottom:10 }}>Email:</Text>
-    <View style={{ display: "flex", flexDirection: "row", width: "100%", alignItems: "center", gap: 10, borderColor: 'gray', borderWidth: 1, height: 50, borderRadius: 10, padding: 7, backgroundColor: "white" }}>
+            <View style={{position:"relative"}}>
+    <Text style={{ marginTop: 40, color: "gray", fontSize: 20, fontWeight: "bold",marginBottom:10,position:"absolute",marginTop:25,marginLeft:15,zIndex:999,backgroundColor:"white" }}>Email:</Text>
+    <View style={{ display: "flex", flexDirection: "row", width: "100%", alignItems: "center", gap: 10, borderColor: 'gray', borderWidth: 2, height: 70, borderRadius: 10, padding: 7, backgroundColor: "white",marginTop: 40 }}>
     <Fontisto name="email" size={27} color="gray" />
       <TextInput
         style={{ width: "89%", height: 40, paddingLeft: 10, fontSize: 18 }}
@@ -275,9 +287,9 @@ if(name && address && phone && email && url && mapURL && day && Time ){
     </View>
   </View>
 
-  <View>
-    <Text style={{ marginTop: 40, color: "gray", fontSize: 20, fontWeight: "bold",marginBottom:10 }}>Website URL:</Text>
-    <View style={{ display: "flex", flexDirection: "row", width: "100%", alignItems: "center", gap: 10, borderColor: 'gray', borderWidth: 1, height: 50, borderRadius: 10, padding: 7, backgroundColor: "white" }}>
+  <View style={{position:"relative"}}>
+    <Text style={{ marginTop: 40, color: "gray", fontSize: 20, fontWeight: "bold",marginBottom:10,position:"absolute",marginTop:25,marginLeft:15,zIndex:999,backgroundColor:"white" }}>Website URL:</Text>
+    <View style={{ display: "flex", flexDirection: "row", width: "100%", alignItems: "center", gap: 10, borderColor: 'gray', borderWidth: 2, height: 70, borderRadius: 10, padding: 7, backgroundColor: "white",marginTop: 40 }}>
     <MaterialCommunityIcons name="search-web" size={27} color="gray" />
           <TextInput
         style={{ width: "89%", height: 40, paddingLeft: 10, fontSize: 18 }}
@@ -297,9 +309,9 @@ if(name && address && phone && email && url && mapURL && day && Time ){
     </View>
   )}
 
-  <View>
-    <Text style={{ marginTop: 40, color: "gray", fontSize: 20, fontWeight: "bold",marginBottom:10 }}>Map URL:</Text>
-    <View style={{ display: "flex", flexDirection: "row", width: "100%", alignItems: "center", gap: 10, borderColor: 'gray', borderWidth: 1, height: 50, borderRadius: 10, padding: 7, backgroundColor: "white" }}>
+  <View style={{position:"relative"}}>
+    <Text style={{  color: "gray", fontSize: 20, fontWeight: "bold",marginBottom:10,position:"absolute",marginTop:25,marginLeft:15,zIndex:999,backgroundColor:"white" }}>Map URL</Text>
+    <View style={{ display: "flex", flexDirection: "row", width: "100%", alignItems: "center", gap: 10, borderColor: 'gray', borderWidth: 2, height: 70, borderRadius: 10, padding: 7, backgroundColor: "white",marginTop: 40 }}>
     <Feather name="map-pin" size={27} color="gray" />     
      <TextInput
         style={{ width: "89%", height: 40, paddingLeft: 10, fontSize: 18 }}
@@ -307,10 +319,9 @@ if(name && address && phone && email && url && mapURL && day && Time ){
         value={mapURL}
         placeholder="Map URL"
       />
+      
     </View>
-  </View>
-
-  {viewMap && (
+    {viewMap && (
     <View style={{ borderRadius: 25, marginTop: 20 }}>
       <WebView
         source={{ uri: mapURL }}
@@ -318,10 +329,13 @@ if(name && address && phone && email && url && mapURL && day && Time ){
       />
     </View>
   )}
+  </View>
 
-  <View>
-    <Text style={{ marginTop: 40, color: "gray", fontSize: 20, fontWeight: "bold",marginBottom:10 }}>Working day:</Text>
-    <View style={{ display: "flex", flexDirection: "row", width: "100%", alignItems: "center", gap: 10, borderColor: 'gray', borderWidth: 1, height: 50, borderRadius: 10, padding: 7, backgroundColor: "white" }}>
+  
+
+  <View style={{position:"relative"}}>
+    <Text style={{ marginTop: 40, color: "gray", fontSize: 20, fontWeight: "bold",marginBottom:10,position:"absolute",marginTop:25,marginLeft:15,zIndex:999,backgroundColor:"white"}}>Working day</Text>
+    <View style={{ display: "flex", flexDirection: "row", width: "100%", alignItems: "center", gap: 10, borderColor: 'gray', borderWidth: 2, height: 70, borderRadius: 10, padding: 7, backgroundColor: "white",marginTop: 40 }}>
     <FontAwesome6 name="calendar-days" size={27} color="gray" />
       <TextInput
         style={{ width: "89%", height: 40, paddingLeft: 10, fontSize: 18 }}
@@ -332,9 +346,9 @@ if(name && address && phone && email && url && mapURL && day && Time ){
     </View>
   </View>
 
-  <View style={{ marginBottom: 40 }}>
-    <Text style={{ marginTop: 40, color: "gray", fontSize: 20, fontWeight: "bold",marginBottom:10}}>Timing:</Text>
-    <View style={{ display: "flex", flexDirection: "row", width: "100%", alignItems: "center", gap: 10, borderColor: 'gray', borderWidth: 1, height: 50, borderRadius: 10, padding: 7, backgroundColor: "white" }}>
+  <View style={{ marginBottom: 40,position:"relative" }}>
+    <Text style={{  color: "gray", fontSize: 20, fontWeight: "bold",marginBottom:10,position:"absolute",marginTop:25,marginLeft:15,zIndex:999,backgroundColor:"white"}}>Timing</Text>
+    <View style={{ display: "flex", flexDirection: "row", width: "100%", alignItems: "center", gap: 10, borderColor: 'gray', borderWidth: 2, height: 70, borderRadius: 10, padding: 7, backgroundColor: "white",marginTop: 40 }}>
     <Ionicons name="time-outline" size={27} color="gray" />      
     <TextInput
         style={{ width: "89%", height: 40, paddingLeft: 10, fontSize: 18 }}
@@ -356,9 +370,10 @@ if(name && address && phone && email && url && mapURL && day && Time ){
 
 :(
   <Pressable
-  style={{backgroundColor:"midnightblue",width:"80%",padding:10,borderRadius:10}}
+  style={{backgroundColor:"midnightblue",width:"80%",padding:10,borderRadius:10,marginLeft:"10%"}}
   onPress={()=>{alert("Maximum Reached")}}>
-    <Text style={{color:"white",fontWeight:"bold",fontSize:18,textAlign:"center"}}>Add images</Text>
+    <Text style={{color:"white",fontWeight:"bold",fontSize:18,textAlign:"center"}}><LottieView style={{width:40,height:40}} source={require('../../util/Animation - 1716722384715.json')} autoPlay loop />
+</Text>
   </Pressable>)}
    
   <ScrollView horizontal={true} style={{ marginTop: 20 }}>
@@ -371,15 +386,15 @@ if(name && address && phone && email && url && mapURL && day && Time ){
 
   </ScrollView>
   <Pressable
-    style={{backgroundColor:"midnightblue",width:"96%",marginLeft:"2%",padding:10,borderRadius:10,marginTop:20}}
+    style={{backgroundColor:"midnightblue",width:"96%",marginLeft:"2%",padding:10,borderRadius:10,marginTop:20,height:70}}
     onPress={()=>{
       additem()
     }}>
     {
       Loading?(
-        <ActivityIndicator size={24}></ActivityIndicator>
+        <LottieView style={{width:100,height:80,fontSize:20,marginLeft:110}} source={require('../../util/Animation - 1716706020643.json')} autoPlay loop />
       ):(
-        <View><Text style={{color:"white",fontWeight:"bold",fontSize:18,textAlign:"center"}}>Add item</Text>
+        <View><Text style={{color:"white",fontWeight:"bold",fontSize:18,textAlign:"center",padding:8}}>Add item</Text>
         </View>
       )
     }

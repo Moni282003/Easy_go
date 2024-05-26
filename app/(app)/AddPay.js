@@ -88,7 +88,10 @@ export default function AddPay() {
       const { data: paymentData, error: paymentError } = await supabase
         .from('Payment')
         .select('Name, Start, End')
-        .or(`End.is.null,End.lte.${formattedToday}`);
+        .or(`End.is.null,End.lte.${formattedToday}`)
+        .eq('Plan','Priority')
+        ;
+
 
       if (paymentError) {
         console.error(paymentError.message);

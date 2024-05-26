@@ -1,20 +1,23 @@
 import React, { useState } from 'react';
-import { View, Image, TextInput, StyleSheet, KeyboardAvoidingView, TouchableOpacity, Text, Alert, Platform } from 'react-native';
+import { View, Image, TextInput, StyleSheet, KeyboardAvoidingView, TouchableOpacity, Text, Alert, Platform, ActivityIndicator } from 'react-native';
 import { MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native'; // Import useNavigation from @react-navigation/native
 import { UseAuth } from '../Context/UseAuth';
 import { supabase } from '../util/supabase';
+import LottieView from 'lottie-react-native';
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
   const { login, setType } = UseAuth();
-
+  const [loading,setLoading]=useState(false)
   const navigate = useNavigation();
 
   const handleLogin = async () => {
+    setLoading(true)
     if (!email || !pass) {
       Alert.alert("Sign In", "Please fill all the fields!");
+      setLoading(false)
       return;
     }
 
@@ -46,11 +49,13 @@ export default function SignIn() {
         }
        
       }
+      setLoading(false)
     
   };
 
   return (
     <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === "ios" ? "padding" : "height"}>
+        <LottieView style={{width:150,height:150,marginLeft:250}} source={require('../util/Animation - 1716705566377.json')} autoPlay loop />
       <View>
         <Image
           style={styles.logo}
@@ -58,7 +63,7 @@ export default function SignIn() {
         />
       </View>
       <View style={styles.titleContainer}>
-        <Text style={styles.title}>ADMIN</Text>
+        <Text style={styles.title}>ADMIN LOGIN</Text>
       </View>
       <View style={styles.contentContainer}>
         <View style={styles.inputContainer}>
@@ -78,6 +83,7 @@ export default function SignIn() {
             secureTextEntry={true}
             value={pass}
             onChangeText={setPass}
+            keyboardType='number-pad'
           />
         </View>
         <TouchableOpacity
@@ -85,8 +91,13 @@ export default function SignIn() {
           style={styles.signInButton}
           onPress={handleLogin} // Add onPress event
         >
-          <Text style={styles.buttonText}>Sign In</Text>
+
+{loading ? (        <LottieView style={{width:150,height:100}} source={require('../util/Animation - 1716706020643.json')} autoPlay loop />
+):(<Text style={styles.buttonText}>Sign In</Text>
+)         
+}
         </TouchableOpacity>
+
         {/* <View style={styles.signUpContainer}>
           <Text>New Admin Account?</Text>
           <Pressable onPress={() => router.replace('signUp')}>
@@ -114,8 +125,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   logo: {
-    width: 250,
-    height: 250,
+    width: 200,
+    height: 200,
     marginBottom: 20,
   },
   inputContainer: {
@@ -165,10 +176,10 @@ const styles = StyleSheet.create({
   footerContainer: {
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 30,
+    marginTop:40
   },
   footerText: {
-    fontSize: 15,
+    fontSize: 18,
     color:"gray",
     fontWeight:"bold"
   },

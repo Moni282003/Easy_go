@@ -5,6 +5,7 @@ import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { useNavigation } from '@react-navigation/native'; // Import useNavigation
 import { supabase } from '../../../util/supabase';
+import Feather from '@expo/vector-icons/Feather';
 
 export default function List() {
   const [row1,setRow1]=useState(0)
@@ -65,9 +66,9 @@ export default function List() {
 
   const categories = [
     { name: "List Places", backgroundColor: "#3b5998", icon: <MaterialIcons name="place" size={70} color="white" />, onPress: () => handlePress("List Places"), totalCount: row2 },
-    { name: "List Category", backgroundColor: "#009688", icon: <FontAwesome5 name="th-list" size={70} color="white" />, onPress: () => handlePress("List Category"), totalCount: row1 },
-    { name: "List Items", backgroundColor: "#4CAF50", icon: <MaterialIcons name="add-shopping-cart" size={70} color="white" />, onPress: () => handlePress("List Items"), totalCount: row3 },
-    { name: "List Advertisement", backgroundColor: "#2196F3", icon: <MaterialCommunityIcons name="newspaper" size={70} color="white" />, onPress: () => handlePress("List Advertisement"), totalCount: row4 }
+    { name: "List Category", backgroundColor: "#3b5998", icon: <FontAwesome5 name="th-list" size={70} color="white" />, onPress: () => handlePress("List Category"), totalCount: row1 },
+    { name: "List Items", backgroundColor: "#3b5998", icon: <MaterialIcons name="add-shopping-cart" size={70} color="white" />, onPress: () => handlePress("List Items"), totalCount: row3 },
+    { name: "List Advertisement", backgroundColor: "#3b5998", icon: <MaterialCommunityIcons name="newspaper" size={70} color="white" />, onPress: () => handlePress("List Advertisement"), totalCount: row4 }
   ];
 
   const handlePress = (itemName) => {
@@ -91,18 +92,21 @@ export default function List() {
   };
 
   return (
-    <View style={{ backgroundColor: "#dedede", flex: 1, borderWidth:2,
+    <View style={{ backgroundColor: "white", flex: 1, borderWidth:2,
     borderColor:"#ededed" }}>
-      <Text style={{ textAlign: "center", fontSize: 25, fontWeight: "bold", marginVertical: 15, color: "black" }}>List in EasyGo</Text>
+<View style={{flexDirection:"row",justifyContent:"center",gap:20,alignItems:"center",backgroundColor:"midnightblue",width:"70%",marginLeft:"15%",padding:0,borderRadius:45,marginBottom:20,marginTop:20,borderTopRightRadius:10,borderBottomLeftRadius:10,elevation:10}}>
+<Feather name="list" size={36} color="white" />      
+<Text style={{ textAlign: "center", fontSize: 25, fontWeight: "bold", marginVertical: 15, color: "white" }}>List in EasyGo</Text></View>      
       <FlatList
         data={categories}
         renderItem={({ item }) => (
           <Pressable
-            style={{ backgroundColor: item.backgroundColor, width: "90%", marginLeft: "5%", height: 170, borderRadius: 20, marginBottom: 30, elevation: 10 }}
+            style={{ backgroundColor: item.backgroundColor, width: "90%", marginLeft: "5%", height: 120, borderRadius: 7, marginBottom: 30, elevation: 10,borderBottomLeftRadius:30,borderTopRightRadius:30,
+            borderWidth:6,borderRightColor:"#cbce91ff",borderTopColor:"#cbce91ff",borderLeftColor:"#ea738dff",borderBottomColor:"#ea738dff"}}
             onPress={item.onPress}
           >
             <View style={{ position: 'absolute', top: 20, left: 20 }}>
-              <Text style={{ fontSize: 26, color: 'white', fontWeight: "bold" }}>{item.name}</Text>
+              <Text style={{ fontSize: 21, color: 'white', fontWeight: "bold" }}>{item.name}</Text>
             </View>
             <View style={{ position: 'absolute', bottom: 20, right: 20 }}>
               {item.icon}
