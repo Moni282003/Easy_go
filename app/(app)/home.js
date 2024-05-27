@@ -11,7 +11,8 @@ import { Entypo, FontAwesome5, Ionicons } from '@expo/vector-icons';
 const Tab = createMaterialTopTabNavigator();
 
 export default function Home() {
-  const { type } = UseAuth();
+  // const { type } = UseAuth();
+  const type=true;
   const windowWidth = useWindowDimensions().width;
   const tabBarPadding = type ? 0 : windowWidth * 0.13; // Adjust padding based on screen width
 

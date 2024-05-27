@@ -144,17 +144,15 @@ export default function AddPlan() {
                         onChangeText={setPlaceFilter}
                     />
                 </View>
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between', backgroundColor: 'blue', padding: 15, paddingHorizontal: 25, marginBottom: 10 }}>
-                    <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 19 }}>SNO</Text>
-                    <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 19 }}>NAME</Text>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', backgroundColor: 'midnightblue', padding: 15, paddingHorizontal: 25,borderTopLeftRadius:25,borderTopRightRadius:25,width:"94%",marginLeft:"3%",marginTop:20 }}>
+                    <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 19,marginLeft:20 }}>NAME</Text>
                     <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 19 }}>ACTION</Text>
                 </View>
                 {filteredNames.length > 0 ? (
                     filteredNames.map((item, index) => (
-                        <View key={index} style={{ backgroundColor: index % 2 === 0 ? '#bcbcbc' : 'white', padding: 5, borderRadius: 10 }}>
+                        <View key={index} style={{ backgroundColor: index % 2 === 0 ? '#bcbcbc' : 'white', padding: 5,width:"94%",marginLeft:"3%",paddingBottom:20 }}>
                             <View key={index} style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 10, paddingLeft: 30 }}>
-                                <Text style={{ width: '10%', textAlign: 'center', fontSize: 17 }}>{index + 1}</Text>
-                                <Text style={{ width: '50%', textAlign: 'center', fontSize: 17, fontWeight: 'bold' }}>{item.Name}</Text>
+                                <Text style={{ width: '50%', textAlign: 'left', fontSize: 17, fontWeight: 'bold' ,marginLeft:10}}>{item.Name}</Text>
                                 <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', width: '30%' }}>
                                     <Pressable onPress={() => handleAdd(item)} style={{ padding: 5, backgroundColor: 'blue', marginRight: 10, borderRadius: 7 }}>
                                         <Ionicons name="add" size={24} color="white"                                    />

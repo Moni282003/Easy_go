@@ -172,17 +172,18 @@ export default function EditPlan() {
                     <Picker.Item label="Normal" value="Normal" />
                     <Picker.Item label="Priority" value="Priority" />
                 </Picker>
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between', backgroundColor: 'blue', padding: 15, paddingHorizontal: 25, marginBottom: 10 }}>
-                    <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 19 }}>SNO</Text>
-                    <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 19 }}>NAME</Text>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', backgroundColor: 'midnightblue', padding: 15, paddingHorizontal: 25, marginBottom: 10
+                ,width:"96%",borderTopLeftRadius:25,borderTopRightRadius:25,marginLeft:"2%"
+                 }}>
+                    <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 19,marginLeft:10 }}>NAME</Text>
                     <Text style={{ color: 'white', fontWeight:'bold', fontSize: 19 }}>ACTION</Text>
                 </View>
                 {filteredNames.length > 0 ? (
                     filteredNames.map((item, index) => (
-                        <View key={index} style={{ backgroundColor: index % 2 === 0 ? '#bcbcbc' : 'white', padding: 5, borderRadius: 10 }}>
+                        <View key={index} style={{ backgroundColor: index % 2 === 0 ? '#bcbcbc' : 'white', padding: 0, borderRadius: 0,width:"96%",marginLeft:"2%",paddingBottom:20,borderBottomLeftRadius:filteredNames.length==index+1?20:0,borderBottomRightRadius:filteredNames.length==index+1?20:0
+                    }}>
                             <View key={index} style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 10, paddingLeft: 30 }}>
-                                <Text style={{ width: '10%', textAlign: 'center', fontSize: 17 }}>{index + 1}</Text>
-                                <Text style={{ width: '50%', textAlign: 'center', fontSize: 17, fontWeight: 'bold' }}>{item.Name}</Text>
+                                <Text style={{ width: '50%', textAlign: 'left', fontSize: 20, fontWeight: 'bold' }}>{item.Name}</Text>
                                 <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', width: '30%' }}>
                                     <Pressable onPress={() => handleAdd(item)} style={{ padding: 5, backgroundColor: 'blue', marginRight: 10, borderRadius: 7 }}>
                                         <AntDesign name="edit" size={24} color="white" />
@@ -192,7 +193,7 @@ export default function EditPlan() {
                                     </Pressable>
                                 </View>
                             </View>
-                            <View style={{ flexDirection: "row", justifyContent: "space-evenly", marginTop: 5 }}>
+                            <View style={{ flexDirection: "column", justifyContent: "space-evenly", marginTop: 5 }}>
                                 <View>
                                     <Text style={{ textAlign: 'center', fontSize: 17, color: "green" }}>Category: {item.Category}</Text>
                                 </View>
@@ -203,17 +204,17 @@ export default function EditPlan() {
                                 .map((plan, idx) => (
                                     <View key={idx} style={{ flexDirection: "column", marginTop: 5, alignItems: "flex-start", paddingHorizontal: 10 }}>
                                         <View>
-                                            <View style={{ flexDirection: "row", marginTop: 5, gap: 90 }}>
-                                                <Text style={{ textAlign: 'center', fontSize: 17, fontWeight: "bold", color: "tomato" }}>Plan: {plan.Plan}</Text>
+                                            <View style={{ flexDirection: "row", marginTop: 5, gap: 90,paddingRight:10 }}>
+                                                <Text style={{ textAlign: 'center', fontSize: 16, fontWeight: "bold", color: "tomato" }}>Plan: {plan.Plan}</Text>
                                                 {plan.Plan === "Normal" ? (
                                                     <Text></Text>
                                                 ) : (
                                                     plan.End !== "null" ? (
-                                                        <Text style={{ textAlign: 'center', fontSize: 17, fontWeight: "bold", color: "tomato" }}>
+                                                        <Text style={{ textAlign: 'center', fontSize: 16, fontWeight: "bold", color: "tomato" }}>
                                                             Expire: {plan.End}
                                                         </Text>
                                                     ) : (
-                                                        <Text style={{ textAlign: 'center', fontSize: 17, fontWeight: "bold", color: "tomato" }}>
+                                                        <Text style={{ textAlign: 'center', fontSize: 16, fontWeight: "bold", color: "tomato" }}>
                                                             Expire: Not Paid
                                                         </Text>
                                                     )

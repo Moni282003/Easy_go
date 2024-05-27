@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, Pressable, ScrollView, RefreshControl } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { supabase } from '../../../util/supabase'; 
+import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
+import Ionicons from '@expo/vector-icons/Ionicons';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
 const Stats = () => {
     const navigation = useNavigation();
@@ -91,29 +94,54 @@ const Stats = () => {
    
     return (
         <ScrollView
-            style={{ backgroundColor: "#dedede", flex: 1, borderWidth: 2, borderColor: "#ededed" }}
-            refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-        >
-            
-            <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: 40 }}>
-                <Pressable style={{ width: "80%", backgroundColor: "#ff5555", paddingHorizontal: 50, borderRadius: 20, paddingVertical: 20, elevation: 10, marginVertical: 20, marginLeft: 0 }} onPress={navigateToPage1}>
-                    <Text style={{ color: "black", fontSize: 25 }}>Add Plan</Text>
-                    <Text style={{ color: "black", fontSize: 25 }}>Total count: {addItemCount - paymentCount}</Text>
+            style={{ backgroundColor: "white", flex: 1, borderWidth: 2, borderColor: "#ededed" }}
+            refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+            <View style={{flexDirection:"row",justifyContent:"center",alignItems:"center",backgroundColor:"midnightblue",width:"70%",marginLeft:"15%",padding:0,borderRadius:45,marginBottom:0,marginTop:20,borderTopRightRadius:10,borderBottomLeftRadius:10,elevation:10,gap:20
+            }}>
+            <FontAwesome5 name="amazon-pay" size={30} color="white" />
+      <Text style={{ textAlign: "center", fontSize: 25, fontWeight: "bold", marginVertical: 15, color: "white" }}>Pay in EasyGo</Text></View>
+            <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: 10 }}>
+
+            <Pressable  style={{ width: "80%", backgroundColor: "tomato", paddingHorizontal: 50, borderRadius: 7, paddingVertical: 20, elevation: 10, marginVertical: 20, marginLeft: 0 ,height:175,
+                borderBottomLeftRadius:30,borderTopRightRadius:30, paddingRight:25,
+                borderWidth:6,borderRightColor:"#cbce91ff",borderTopColor:"#cbce91ff",borderLeftColor:"#ea738dff",borderBottomColor:"#ea738dff"
+                }} onPress={navigateToPage4}>
+                    <Text style={{ color: "black", fontSize: 25,color: "black", fontSize: 25,fontWeight:"bold",color:"white" }}>Statistics</Text>
+                    <MaterialIcons name="query-stats" size={70} color="white" style={{marginLeft:150,marginTop:30}} />
                 </Pressable>
-                <Pressable style={{ width: "80%", backgroundColor: "#55ff55", paddingHorizontal: 50, borderRadius: 20, paddingVertical: 20, elevation: 10, marginVertical: 20 }} onPress={navigateToPage2}>
-                    <Text style={{ color: "black", fontSize: 25 }}>Edit Plan</Text>
-                    <Text style={{ color: "black", fontSize: 25 }}>Priority count: {priority}</Text>
-                    <Text style={{ color: "black", fontSize: 25 }}>Normal count: {normalCount}</Text>
-                    <Text style={{ color: "black", fontSize: 25 }}>Total count: {normalCount + priority}</Text>
+                <Pressable style={{ width: "80%", backgroundColor: "tomato", paddingHorizontal: 50, borderRadius: 7, paddingVertical: 20, elevation: 10, marginVertical: 20, marginLeft: 0 ,height:175,
+                borderBottomLeftRadius:30,borderTopRightRadius:30,paddingRight:25,
+                borderWidth:6,borderRightColor:"#cbce91ff",borderTopColor:"#cbce91ff",borderLeftColor:"#ea738dff",borderBottomColor:"#ea738dff"
+                }} onPress={navigateToPage1}>
+                    <View style={{flexDirection:"row",alignItems:"center",justifyContent:"space-between"}}>
+                    <View>
+                    <Text style={{ color: "black", fontSize: 25,fontWeight:"bold",color:"white"}}>Add Plan</Text>
+                    <Text style={{ color: "black", fontSize: 20,color:"white" }}>Total count: {addItemCount - paymentCount}</Text>
+                    <MaterialIcons name="add-box" size={70} color="white" style={{marginLeft:150}} />
+                    </View>
+                    </View>
+
                 </Pressable>
-                <Pressable style={{ width: "80%", backgroundColor: "#5555ff", paddingHorizontal: 50, borderRadius: 20, paddingVertical: 20, elevation: 10, marginVertical: 20, marginLeft: 0 }} onPress={navigateToPage3}>
-                    <Text style={{ color: "black", fontSize: 25 }}>Payment</Text>
-                    <Text style={{ color: "black", fontSize: 25 }}>Total count: {priorityCount}</Text>
+                <Pressable style={{  width: "80%", backgroundColor: "tomato", paddingHorizontal: 50, borderRadius: 7, paddingVertical: 20, elevation: 10, marginVertical: 20, marginLeft: 0 ,height:175,
+                borderBottomLeftRadius:30,borderTopRightRadius:30,
+                borderWidth:6,borderRightColor:"#cbce91ff",borderTopColor:"#cbce91ff",borderLeftColor:"#ea738dff",borderBottomColor:"#ea738dff"}} onPress={navigateToPage2}>
+
+                <Text style={{ color: "black", fontSize: 25,fontWeight:"bold",color:"white",marginBottom:20}}>Edit Plan</Text>
+                    <View
+                    style={{flexDirection:"row",justifyContent:"center",gap:40,alignItems:"center"}}
+                    ><View>
+                    <Text style={{ color: "black", fontSize: 20 , color:"white",fontWeight:"bold" }}>Priority: {priority}</Text>
+                    <Text style={{ color: "black", fontSize: 20 , color:"white",fontWeight:"bold" }}>Normal: {normalCount}</Text></View>
+                    <Text style={{ color: "black", fontSize: 20 , color:"white",fontWeight:"bold" }}>Total: {normalCount + priority}</Text></View>
                 </Pressable>
-                <Pressable style={{ width: "80%", backgroundColor: "#5555ff", paddingHorizontal: 50, borderRadius: 20, paddingVertical: 20, elevation: 10, marginVertical: 20, marginLeft: 0 }} onPress={navigateToPage4}>
-                    <Text style={{ color: "black", fontSize: 25 }}>Stats</Text>
-                    <Text style={{ color: "black", fontSize: 25 }}></Text>
+                <Pressable style={{   width: "80%", backgroundColor: "tomato", paddingHorizontal: 50, borderRadius: 7, paddingVertical: 20, elevation: 10, marginVertical: 20, marginLeft: 0 ,height:175,
+                borderBottomLeftRadius:30,borderTopRightRadius:30,paddingRight:25,
+                borderWidth:6,borderRightColor:"#cbce91ff",borderTopColor:"#cbce91ff",borderLeftColor:"#ea738dff",borderBottomColor:"#ea738dff"}} onPress={navigateToPage3}>
+                <Text style={{ color: "black", fontSize: 25,fontWeight:"bold",color:"white"}}>Payment</Text>
+                <Text style={{ color: "black", fontSize: 20 , color:"white" }}>Total Count: {priorityCount}</Text>
+                <MaterialIcons name="currency-rupee" size={70} color="white" style={{marginLeft:150}} />
                 </Pressable>
+               
             </View>
         </ScrollView>
     );

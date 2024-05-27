@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Alert, TextInput, Modal } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Alert, TextInput, Modal, ScrollView } from 'react-native';
 import { supabase } from '../../util/supabase';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import Entypo from '@expo/vector-icons/Entypo';
@@ -106,7 +106,7 @@ export default function EditUser() {
   const handleDisable = async (id) => {
     Alert.alert(
       'Confirmation',
-      `Are you sure you want to ${workers.find(worker => worker.id === id).Activity ? 'disable' : 'enable'} this worker?`,
+      `Are you sure you want to ${workers.find(worker => worker.id === id).Activity === "true" ? 'disable' : 'enable'} this worker?`,
       [
         {
           text: 'Cancel',
@@ -127,7 +127,7 @@ export default function EditUser() {
                 return;
               }
 
-              const updatedActivity = !worker.Activity; 
+              const updatedActivity = worker.Activity === "true" ? "false" : "true";
 
               const { error: updateError } = await supabase
                 .from('Worker')
@@ -139,7 +139,7 @@ export default function EditUser() {
               } else {
                 Alert.alert(
                   'Success',
-                  `Worker activity has been ${updatedActivity ? 'enabled' : 'disabled'} successfully!`
+                  `Worker activity has been ${updatedActivity === "true" ? 'enabled' : 'disabled'} successfully!`
                 );
                 fetchWorkers();
               }
@@ -175,7 +175,7 @@ export default function EditUser() {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <Text style={styles.header}>Worker List</Text>
       <View style={styles.table}>
         <View style={[styles.row, styles.headerRow]}>
@@ -184,7 +184,7 @@ export default function EditUser() {
           <Text style={[styles.cell, styles.headerCell, styles.adjust]}>Actions</Text>
         </View>
         {workers.map((worker, index) => (
-          <View key={worker.id} style={[styles.row, worker.Activity ? styles.activeRow : styles.inactiveRow]}>
+          <View key={worker.id} style={[styles.row, worker.Activity === "true" ? styles.activeRow : styles.inactiveRow]}>
             <Text style={[styles.cell, styles.adjust1]}>{index + 1}</Text>
             <Text style={styles.cell}>{worker.Name}</Text>
             <View style={styles.actions}>
@@ -201,7 +201,7 @@ export default function EditUser() {
               <TouchableOpacity
                 style={[styles.actionButton, styles.disableButton]}
                 onPress={() => handleDisable(worker.id)}>
-                <MaterialIcons name={worker.Activity ? "disabled-by-default" : "check"} size={24} color="black" />
+                <MaterialIcons name={worker.Activity === "true" ? "disabled-by-default" : "check"} size={24} color="black" />
               </TouchableOpacity>
             </View>
           </View>
@@ -241,28 +241,28 @@ export default function EditUser() {
           </View>
         </View>
       </Modal>
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
     backgroundColor: '#fff',
-    paddingTop: 50
+    padding: 20,
+    backgroundColor:"white"
   },
   header: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
+    textAlign: 'center',
   },
   table: {
-    width: '98%',
+    width: '100%',
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 5,
-    marginTop: 15,
   },
   row: {
     flexDirection: 'row',
@@ -273,111 +273,101 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   headerRow: {
-    backgroundColor: '#f2f2f2',
-    borderTopLeftRadius: 5,
-    borderTopRightRadius: 5,
+    backgroundColor: '#f0f0f0',
   },
   cell: {
     flex: 1,
+    textAlign: 'center',
   },
   headerCell: {
     fontWeight: 'bold',
-    padding:10
   },
   actions: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    gap:10
-  },
-  actionButton: {
-    padding: 5,
-    borderRadius: 5,
-    alignItems: 'center',
     justifyContent: 'center',
   },
+  actionButton: {
+    marginHorizontal: 5,
+    padding: 5,
+    borderRadius: 5,
+  },
   editButton: {
-    backgroundColor: '#f0ad4e',
+    backgroundColor: '#4CAF50',
   },
   deleteButton: {
-    backgroundColor: '#d9534f',
+    backgroundColor: '#F44336',
   },
   disableButton: {
-    backgroundColor: '#5bc0de',
+    backgroundColor: '#FFC107',
   },
-  adjust:{
-    marginLeft:15
+  activeRow: {
+    backgroundColor: '#88ff88',
   },
-  adjust1:{
-    marginLeft:10
+  inactiveRow: {
+    backgroundColor: '#ff8888',
+  },
+  adjust: {
+    flex: 1.7,
+  },
+  adjust1: {
+    flex: 0.5,
   },
   modalContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    width:"100%"
   },
   modalContent: {
-    backgroundColor: '#fff',
-    padding: 20,
+    width: '80%',
+    backgroundColor: 'white',
     borderRadius: 10,
-    elevation: 5,
-    width: '90%',
+    padding: 20,
+    alignItems: 'center',
   },
   modalTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    marginBottom: 10,
+    marginBottom: 20,
   },
   modalOption: {
-    padding: 10,
+    width: '100%',
+    padding: 15,
     borderBottomWidth: 1,
     borderBottomColor: '#ccc',
-    backgroundColor:"blue",
-    marginBottom:15,
-    borderRadius:10
+    alignItems: 'center',
   },
   modalOptionText: {
-    fontSize: 16,
-    color:"white",
-    textAlign:"center"
-
+    fontSize: 18,
   },
   input: {
-    borderWidth: 1,
+    width: '100%',
+    height: 40,
     borderColor: '#ccc',
+    borderWidth: 1,
     borderRadius: 5,
-    padding: 10,
-    marginBottom: 10,
+    marginBottom: 20,
+    paddingHorizontal: 10,
   },
   updateButton: {
-    backgroundColor: '#5cb85c',
-    padding: 10,
+    backgroundColor: '#4CAF50',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
     borderRadius: 5,
-    alignItems: 'center',
-    marginTop: 10,
+    marginBottom: 10,
   },
   updateButtonText: {
-    color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 16,
+    color: 'white',
+    fontSize: 18,
   },
   cancelButton: {
-    backgroundColor: '#d9534f',
-    padding: 10,
+    backgroundColor: '#F44336',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
     borderRadius: 5,
-    alignItems: 'center',
-    marginTop: 10,
   },
   cancelButtonText: {
-    color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 16,
-  },
-  activeRow: {
-    backgroundColor: '#c8e6c9', 
-  },
-  inactiveRow: {
-    backgroundColor: '#ffcdd2', 
+    color: 'white',
+    fontSize: 18,
   },
 });

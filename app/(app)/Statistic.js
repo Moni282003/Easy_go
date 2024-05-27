@@ -100,7 +100,6 @@ export default function Statistic() {
     const selectedPlaceCounts = counts[selectedPlace] || {};
 
     useEffect(() => {
-        // Fetch current month priority payments count
         const fetchCurrentMonthPaymentCount = async () => {
             try {
                 const currentDate = new Date();
@@ -122,7 +121,6 @@ export default function Statistic() {
             }
         };
 
-        // Fetch next month ads count
         const fetchNextMonthAdCount = async () => {
             try {
                 const currentDate = new Date();
@@ -137,7 +135,6 @@ export default function Statistic() {
 
                 setNextMonthAdCount(nextMonthAdCount);
 
-                // Log Adv table total count
                 console.log('Adv table total count:', nextMonthAdCount);
             } catch (error) {
                 console.error('Error fetching next month ad count:', error.message);
@@ -149,27 +146,31 @@ export default function Statistic() {
     }, []);
 
     return (
-        <View>
+        <View style={{backgroundColor:"white",flex:1}}>
             {(typeof places !== 'undefined' && places.length > 0) && (
-                <Picker
+                <View style={{borderWidth:2,marginTop:20,width:"90%",marginLeft:"5%",borderRadius:15,borderColor:"gray"}}>
+                <Picker style={{width:"90%"}}
                     selectedValue={selectedPlace}
                     onValueChange={(itemValue) => setSelectedPlace(itemValue)}
                 >
-                    <Picker.Item label="Select Place" value="" />
+                    <Picker.Item 
+                    label="Select Place" value="Place" />
                     {places.map((place, index) => (
                         <Picker.Item key={index} label={place} value={place} />
                     ))}
-                </Picker>
+                </Picker></View>
             )}
             {selectedPlace && selectedPlaceCounts && (
-                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 20, marginTop: 20 }}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 20, marginTop: 20,
+                width:"80%",marginLeft:"2%",borderRadius:15,borderColor:"gray",marginRight:"5%"
+                 }}>
                     {(selectedPlaceCounts.nameCountInAddItem || selectedPlaceCounts.nameCountInPayment || selectedPlaceCounts.differenceInCounts) ? (
                         <PieChart
-                            style={{ marginLeft: '2%', marginTop: 20 }}
+                            style={{ marginTop: 20 }}
                             widthAndHeight={widthAndHeight}
                             series={[selectedPlaceCounts.nameCountInPayment, selectedPlaceCounts.differenceInCounts]}
                             sliceColor={otherSliceColor}
-                            coverRadius={0.3}
+                            coverRadius={0.1}
                             coverFill={'#FFF'}
                         />
                     ) : null}
@@ -186,14 +187,15 @@ export default function Statistic() {
                 </View>
             )}
             {selectedPlace && selectedPlaceCounts && (
-                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 20}}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 20,marginTop:20,width:"80%",marginLeft:"2%",borderRadius:15,borderColor:"gray",marginRight:"5%"
+            }}>
                     {(selectedPlaceCounts.normalPlanCount || selectedPlaceCounts.priorityPlanCount) ? (
                         <PieChart
                             style={{ marginLeft: '2%', marginTop: 20 }}
                             widthAndHeight={widthAndHeight}
                             series={[selectedPlaceCounts.normalPlanCount, selectedPlaceCounts.priorityPlanCount]}
                             sliceColor={sliceColor}
-                            coverRadius={0.3}
+                            coverRadius={0.1}
                             coverFill={'#FFF'}
                         />
                     ) : null}

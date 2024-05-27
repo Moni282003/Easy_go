@@ -49,10 +49,10 @@ export default function Category() {
         data={categories}
         renderItem={({ item }) => (
           <Pressable
-            style={{ backgroundColor: item.backgroundColor, width: "90%", marginLeft: "5%", height: 120, borderRadius: 7, marginBottom: 30, elevation: 10,borderBottomLeftRadius:30,borderTopRightRadius:30,
-            borderWidth:6,borderRightColor:"#cbce91ff",borderTopColor:"#cbce91ff",borderLeftColor:"#ea738dff",borderBottomColor:"#ea738dff"
-            
-          }}
+          style={{ backgroundColor: item.backgroundColor, width: "90%", marginLeft: "5%", height: 120, borderRadius: 7, marginBottom: 30, elevation: 10,borderBottomLeftRadius:30,borderTopRightRadius:30,
+          borderWidth:6,borderRightColor:"#cbce91ff",borderTopColor:"#cbce91ff",borderLeftColor:"#ea738dff",borderBottomColor:"#ea738dff"
+          
+        }}
             onPress={item.onPress}
           >
             <View style={{ position: 'absolute', top: 20, left: 20 }}>

@@ -154,26 +154,29 @@ export default function AddPay() {
 
   return (
     <View>
+      <View style={{borderWidth:2,padding:2,marginTop:40,borderRadius:10,width:"90%",marginLeft:"5%"}}>
     <Picker
-  style={{ marginTop: 20, borderWidth: 2, borderColor: "black" }}
+  style={{ borderWidth: 2, borderColor: "black" }}
   selectedValue={selectedType}
   onValueChange={(itemValue, itemIndex) => setSelectedType(itemValue)}
 >
   <Picker.Item label="Items" value="Items" />
   <Picker.Item label="Advertisements" value="Advertisements" />
 </Picker>
-
-      <View style={{ flexDirection: 'row', borderBottomWidth: 1, padding: 5, marginTop: 50, backgroundColor: "blue" }}>
-        <Text style={{ flex: 1, fontWeight: 'bold', color: "white", fontSize: 20 }}>Sno</Text>
+</View>
+      <View style={{ flexDirection: 'row', borderBottomWidth: 1, padding: 5, marginTop: 50, backgroundColor: "blue",backgroundColor: 'midnightblue', padding: 15, paddingHorizontal: 25, marginBottom: 10
+                ,width:"96%",borderTopLeftRadius:25,borderTopRightRadius:25,marginLeft:"2%"}}>
         <Text style={{ flex: 3, fontWeight: 'bold', color: "white", fontSize: 20 }}>Name</Text>
-        <Text style={{ flex: 1, fontWeight: 'bold', color: "white", fontSize: 20 }}>Action</Text>
+        <Text style={{ flex: 1, fontWeight: 'bold', color: "white", fontSize: 20,marginLeft:60 }}>Action</Text>
       </View>
       {selectedType === 'Items' && itemTable.map((item, index) => (
-        <View key={index} style={{ flexDirection: "column", borderBottomWidth: 1, backgroundColor: index + 1 % 2 == 0 ? "white" : "#bbbbbb" }} >
+        <View key={index} style={{ flexDirection: "column", borderBottomWidth: 0, backgroundColor: index + 1 % 2 == 0 ? "white" : "#bbbbbb",width:"96%",marginLeft:"2%",
+          borderBottomLeftRadius:itemTable.length==index+1?20:0,borderBottomRightRadius:itemTable.length==index+1?20:0,paddingVertical:20
+
+         }} >
           <View style={{ flexDirection: 'row', padding: 5 }}>
-            <Text style={{ flex: 1, marginLeft: 5, fontSize: 19 }}>{index + 1}</Text>
             <Text style={{ flex: 3, fontSize:19 }}>{item.Name}</Text>
-<Pressable onPress={() =>updateItemPayment(item.Name)} style={{ backgroundColor: "blue", padding: 3, borderRadius: 3 }}>
+<Pressable onPress={() =>updateItemPayment(item.Name)} style={{ backgroundColor: "blue", padding: 3, borderRadius: 3,marginLeft:20 }}>
 <Text style={{ color: 'white', fontSize: 18 }}>Pay Now</Text>
 </Pressable>
 </View>
@@ -184,16 +187,16 @@ export default function AddPay() {
 </View>
 ))}
 {selectedType === 'Advertisements' && advTable.map((adv, index) => (
-<View key={index} style={{ flexDirection: "column", borderBottomWidth: 1, backgroundColor: index + 1 % 2 == 0 ? "white" : "#bbbbbb" }} >
+<View key={index} style={{ flexDirection: "column", borderBottomWidth: 0, backgroundColor: index + 1 % 2 == 0 ? "white" : "#bbbbbb",width:"96%",marginLeft:"2%",
+          borderBottomLeftRadius:advTable.length==index+1?20:0,borderBottomRightRadius:advTable.length==index+1?20:0,paddingVertical:20 }} >
 <View style={{ flexDirection: 'row', padding: 5 }}>
-<Text style={{ flex: 1, marginLeft: 5, fontSize: 19 }}>{index + 1}</Text>
-<Text style={{ flex: 3, fontSize: 19 }}>{adv.Name}</Text>
-<Pressable onPress={() => updateAdvPayment(adv.Name)} style={{ backgroundColor: "blue", padding: 3, borderRadius: 3 }}>
+<Text style={{ flex: 3, fontSize: 20,marginLeft:15,fontWeight:"bold"}}>{adv.Name}</Text>
+<Pressable onPress={() => updateAdvPayment(adv.Name)} style={{ backgroundColor: "blue", padding: 3, borderRadius: 3,marginRight:10, }}>
 <Text style={{ color: 'white', fontSize: 18 }}>Pay Now</Text>
 </Pressable>
 </View>
-<View style={{ flexDirection: "row", alignItems: "center", marginLeft: 30, marginVertical: 10 }}>
-<Text style={{ flex: 3, fontSize: 17, fontWeight: "bold", color: "blue" }}>Place: {adv.Place}</Text>
+<View style={{ flexDirection: "row", alignItems: "center", marginLeft: 30, marginVertical: 10,width:"50%"}}>
+<Text style={{ flex: 3, fontSize: 17, fontWeight: "bold", color: "white",backgroundColor:"blue",padding:8,borderRadius:5,width:"auto"}}>Place: {adv.Place}</Text>
 </View>
 </View>
 ))}

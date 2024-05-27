@@ -99,6 +99,7 @@ export default function AddUser() {
           secureTextEntry={true}
           value={password}
           onChangeText={setPassword}
+          keyboardType='number-pad'
         />
         <TextInput
           style={styles.input}
@@ -106,6 +107,8 @@ export default function AddUser() {
           secureTextEntry={true}
           value={confirmPassword}
           onChangeText={setConfirmPassword}
+          keyboardType='number-pad'
+
         />
       </View>
       <TouchableOpacity activeOpacity={0.9} style={styles.button} onPress={handleAddUser}>
@@ -145,7 +148,7 @@ const styles = StyleSheet.create({
     // borderRightColor:"blue",
     // borderBottomWidth:20,
     // borderBottomColor:"tomato",
-    backgroundColor:"#efefef"
+    backgroundColor:"white"
   },
   header: {
     fontSize: 24,
@@ -167,7 +170,7 @@ const styles = StyleSheet.create({
   },
   button: {
     width: '80%',
-    backgroundColor: 'tomato',
+    backgroundColor: 'midnightblue',
     padding: 15,
     borderRadius: 15,
     alignItems: 'center',
